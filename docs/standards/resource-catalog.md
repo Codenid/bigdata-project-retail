@@ -117,6 +117,42 @@ Los nueve recursos del Streaming Core de la fase 2 están aprobados para impleme
 
 ---
 
+### Diseño aprobado para FASE 2.5 — BigQuery Gold
+
+- Solo RS-DATA-003, dataset `rs_dev_gold`, scope regional, `us-central1` externo,
+  cifrado Google-managed y clasificación `internal`. Se crea vacío, con labels
+  del catálogo, incluyendo role=serving, layer=gold y vertical=multi.
+- No se configuran expiraciones predeterminadas de tablas o particiones: ambas
+  son null/ausentes. Gold es persistente; la retención futura se define por tabla
+  o producto. No se añaden variables de expiración al env.
+- No se envía ni modifica storageBillingModel; se conserva el comportamiento por
+  defecto de BigQuery. Las futuras consultas se plantean on-demand, sin crear
+  reservations, slots, BI Engine, materialized views, cargas ni jobs en esta fase.
+  No se certifica pricing efectivo de jobs futuros sin revisar asignaciones
+  heredadas; no se habilita Reservation API para este corte.
+- RS-SEC-002 usa roles/bigquery.user temporal en proyecto únicamente al necesitar
+  crear el dataset; incluye capacidad de jobs no utilizada y es más amplio que
+  mínimo estricto. Data Owner temporal solo sobre rs_dev_gold para sus operaciones.
+  No se otorgan BigQuery Admin, roles básicos Owner/Editor ni permisos runtime.
+- Para un dataset nuevo, access explícito conserva a los administradores ya
+  existentes del proyecto (specialGroup projectOwners). OWNER en esta ACL es el
+  alias de BigQuery Data Owner a nivel dataset, no un grant de roles/owner al
+  proyecto. No se añaden projectReaders/projectWriters ni accesos públicos.
+- El código detecta un eventual Data Owner automático del creador y compara ACL
+  con el estado inicial. Antes de retirarlo verifica permisos administrativos
+  efectivos del bootstrap mediante projects.testIamPermissions y lectura del
+  dataset. La retirada se ejecuta con credenciales bootstrap y precondición etag,
+  se confirma con lectura posterior y conserva todos los accesos preexistentes.
+- Finally limpia los accesos creados; intenta cleanup de proyecto aunque falle
+  el del dataset. Si no puede demostrar administración bootstrap, no retira el
+  acceso del dataset a ciegas: informa error y detiene la fase, sin ampliar roles.
+- Deploy/validate/destroy usan scripts Python y JSON APIs con autenticación/IAM
+  vía gcloud. No ejecutan SQL ni bq jobs, ni habilitan APIs adicionales.
+- Destroy previsualiza por defecto, solo elimina el dataset vacío con
+  deleteContents=false y rechaza tablas, views, modelos o rutinas. Sin purga.
+
+---
+
 ## 3. Componentes de arquitectura aún no aprovisionados en la fase 2
 
 Estos componentes existen en la arquitectura, pero no deben implementarse todavía en el primer corte de infraestructura:

@@ -1,0 +1,27 @@
+{
+  "component_id": "RS-DATA-003",
+  "api": "bigquery.googleapis.com",
+  "creation_role": "roles/bigquery.user",
+  "creation_permissions": ["bigquery.datasets.create"],
+  "dataset_role": "roles/bigquery.dataOwner",
+  "dataset_owner_alias": "OWNER",
+  "dataset_permissions": [
+    "bigquery.datasets.get", "bigquery.datasets.getIamPolicy",
+    "bigquery.datasets.update", "bigquery.datasets.setIamPolicy", "bigquery.datasets.delete",
+    "bigquery.tables.list", "bigquery.models.list", "bigquery.routines.list"
+  ],
+  "bootstrap_admin_permissions": [
+    "bigquery.datasets.get", "bigquery.datasets.getIamPolicy",
+    "bigquery.datasets.update", "bigquery.datasets.setIamPolicy", "bigquery.datasets.delete"
+  ],
+  "friendly_name": "Gold Insights Retail",
+  "description": "RS-DATA-003 Gold Insights Retail — producto de datos persistente",
+  "dataset_defaults": {
+    "defaultTableExpirationMs": null,
+    "defaultPartitionExpirationMs": null
+  },
+  "initial_access": [{"role": "OWNER", "specialGroup": "projectOwners"}],
+  "request_timeout_seconds": 60,
+  "propagation_attempts": 8,
+  "propagation_delay_seconds": 10
+}
