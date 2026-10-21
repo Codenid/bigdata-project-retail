@@ -44,7 +44,7 @@ Congelar la correspondencia entre diseño y código.
 
 ---
 
-# PASO 2 — Infraestructura GCP reproducible
+# FASE 2 — Infraestructura GCP reproducible
 
 ## Objetivo
 Crear el core RetailSmart mediante código/scripts, sin depender de creación manual.
@@ -182,10 +182,10 @@ Después de cerrar Streaming:
 
 # Trabajo paralelo
 
-Una vez cerrado el Paso 1:
+Una vez cerrada la fase 1:
 
 ### Track A — Infraestructura
-Puede trabajar en Paso 2.
+Puede trabajar en la fase 2.
 
 ### Track B — Contratos / Test CLI
 Puede desarrollar Paso 3 sobre mocks locales mientras infraestructura avanza.
@@ -222,29 +222,21 @@ Reglas:
    - comandos;
    - pruebas;
    - riesgos.
-6. Mantener implementación simple y didáctica.
+6. Priorizar simplicidad operativa, mantenibilidad y reproducibilidad.
 7. Todo debe ser reproducible.
 
 ---
 
-# Primer prompt operativo recomendado
+## Criterios para iniciar la implementación
 
-```text
-Lee primero los cinco documentos de arquitectura, datos y plan.
+Antes del desarrollo de la infraestructura GCP reproducible para el slice
+Streaming, revisar los documentos de arquitectura, datos y plan. El plan de
+implementación debe:
 
-No escribas código todavía.
-
-Estamos trabajando únicamente el PASO 2:
-Infraestructura GCP reproducible para el slice Streaming.
-
-1. Resume los componentes de arquitectura que implementarás.
-2. Indica exactamente qué recursos GCP corresponden.
-3. Propón la estructura mínima de archivos.
-4. Propón variables de configuración.
-5. Define deploy / validate / destroy.
-6. Identifica dependencias e IAM mínimo.
-7. No incluyas Batch, ML, Looker ni Producer Console.
-
-Entrega únicamente el plan de implementación del PASO 2.
-Espera aprobación antes de escribir código.
-```
+1. Resumir los componentes de arquitectura incluidos.
+2. Identificar los recursos GCP correspondientes.
+3. Definir la estructura mínima de archivos y las variables de configuración.
+4. Especificar los comandos `deploy`, `validate` y `destroy`.
+5. Identificar dependencias y permisos IAM mínimos.
+6. Excluir Batch, ML, Looker y Producer Console del alcance.
+7. Obtener revisión y aprobación antes de iniciar el desarrollo.

@@ -27,7 +27,7 @@ Estado inicial: **Streaming Core v1**
 | RS-SEC-002 | Identidad de aprovisionamiento | Security | Transversal | IAM | Service Account | dev | rs-dev-sec-sa-deployer | global | n/a | security | n/a | internal | RetailSmart | script | approved |
 
 
-Los nueve recursos del Streaming Core del Paso 2 están aprobados para implementación; este estado no implica que estén desplegados.
+Los nueve recursos del Streaming Core de la fase 2 están aprobados para implementación; este estado no implica que estén desplegados.
 
 - `scope` admite `global`, `regional` o `multi-region`. Para buckets y dataset se adopta scope regional con location externa compatible; cambiar a multi-region requiere actualizar primero el catálogo.
 - Pub/Sub usa scope global y location `n/a`. La residencia de mensajes se define por configuración específica de los tópicos.
@@ -60,7 +60,7 @@ Los nueve recursos del Streaming Core del Paso 2 están aprobados para implement
 
 ---
 
-## 3. Componentes de arquitectura aún no aprovisionados en Paso 2
+## 3. Componentes de arquitectura aún no aprovisionados en la fase 2
 
 Estos componentes existen en la arquitectura, pero no deben implementarse todavía en el primer corte de infraestructura:
 
@@ -163,4 +163,4 @@ Este catálogo crecerá después con:
 - Observabilidad;
 - ML.
 
-No deben incorporarse todavía al Paso 2 Streaming salvo dependencias estrictamente necesarias.
+No deben incorporarse todavía a la fase 2 de Streaming salvo dependencias estrictamente necesarias.

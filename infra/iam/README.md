@@ -50,7 +50,7 @@ Para la futura ejecución Dataflow, el principal que lance el job podría requer
 roles/iam.serviceAccountUser sobre RS-SEC-001. Esa asignación y los roles de
 Dataflow, Pub/Sub, Storage y BigQuery quedan diferidos a sus fases.
 
-Eliminación/recreación: el destroy integrado del Paso 2 deberá retirar únicamente
+Eliminación/recreación: el destroy integrado de la fase 2 deberá retirar únicamente
 los tres bindings gestionados y eliminar estas dos cuentas mediante bootstrap,
 con el deployer al final y previa comprobación de dependencias. No se implementa
 ni ejecuta destroy en esta fase para evitar borrar las identidades validadas.

@@ -56,7 +56,7 @@ Estos nombres deben conservarse cuando corresponda o documentarse si se ajustan.
 | Bronze Datos Batch | Cloud Storage |
 | [Batch Processor] Curación Batch | Spark / PySpark |
 | Silver Datos Curados | Cloud Storage |
-| [Orchestrator] Planificador Batch | Airflow / servicio GCP enseñado en curso |
+| [Orchestrator] Planificador Batch | Airflow / servicio gestionado de GCP por evaluar |
 | [ML Job] Entrenamiento Forecast | Spark / PySpark |
 | [Model] Modelo de Demanda | artefacto de modelo |
 | [Batch Processor] Planificación Diaria | Spark / PySpark |
