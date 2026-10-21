@@ -98,3 +98,10 @@ class Phase22(unittest.TestCase):
     def test_conditional_binding_does_not_count_as_unconditional(self):
         self.assertFalse(has_binding({'bindings': [{'role': 'viewer', 'members': ['x'],
                                                    'condition': {'expression': 'false'}}]}, 'viewer', 'x'))
+
+    def test_forbidden_manifest_role_rejected_before_cloud(self):
+        self.manifest['viewer_role'] = self.manifest['forbidden_roles'][0]
+        with patch('infra.iam.manage.run') as cloud:
+            with self.assertRaisesRegex(ValueError, 'Rol prohibido'):
+                manage(self.config, self.resources, self.manifest, 'deploy')
+        cloud.assert_not_called()

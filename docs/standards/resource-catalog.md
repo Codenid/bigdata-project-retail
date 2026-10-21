@@ -75,6 +75,10 @@ Los nueve recursos del Streaming Core de la fase 2 están aprobados para impleme
   Es aprovisionamiento más amplio que mínimo estricto: permite otras operaciones
   Pub/Sub además de las usadas por scripts y debe revisarse posteriormente.
   No se concede administración IAM al deployer ni roles runtime a RS-SEC-001.
+  Desde FASE 2.6, cada operación concede el binding solo si falta y retira en
+  finally exclusivamente el creado por esa operación, confirmando su ausencia.
+  Los bindings preexistentes se conservan y se reportan. Las métricas separan
+  changes permanentes de iam_changes temporales; validate puede usar IAM temporal.
 - La retención de una hora puede descartar eventos no consumidos. La expiración
   permite eliminar subscriptions inactivas; deploy las recrea. Revisar ambos
   parámetros antes del E2E. No hay cómputo, retención de tópico ni features pagas
@@ -257,3 +261,18 @@ Este catálogo crecerá después con:
 - ML.
 
 No deben incorporarse todavía a la fase 2 de Streaming salvo dependencias estrictamente necesarias.
+
+
+## Operación integrada — FASE 2.6
+
+El coordinador reutiliza los módulos existentes en orden Configuration →
+Bootstrap/APIs → IAM Foundation → Pub/Sub → Storage → BigQuery. No incorpora
+recursos al catálogo. Ante fallo limpia IAM temporal, conserva recursos válidos y
+omite fases dependientes, sin rollback destructivo.
+
+Destroy es preview por defecto; antes de borrar comprueba todos los módulos.
+Con ejecución explícita elimina Gold vacío, buckets vacíos, subscription y tópicos,
+en ese orden. Rechaza artefactos BigQuery, objetos Storage y subscriptions externas.
+No admite purge/force ni elimina identidades, IAM Foundation, APIs, proyecto o
+billing. Los permisos preexistentes se conservan. Los prechecks no sustituyen las
+protecciones de cada módulo frente a cambios concurrentes.

@@ -11,26 +11,22 @@ especializado → Gold → consumidores.
 | 2.3 Pub/Sub | COMPLETADO |
 | 2.4 Storage | COMPLETADO |
 | 2.5 BigQuery | COMPLETADO |
-| 2.6 Integración y fases posteriores | PENDIENTE |
+| 2.6 Deploy integrado | COMPLETADO |
+| Fases posteriores | PENDIENTE |
 
-Último avance: dataset Gold vacío en us-central1, sin expiraciones predeterminadas
-ni modelo de almacenamiento explícito; segundo deploy con `changes=0`.
-IAM temporal retirado al finalizar, sin
-permisos runtime nuevos, cargas, jobs ni capacidad dedicada.
-El Paso 2 integrado continúa en desarrollo.
+Último avance: orquestación secuencial del Streaming Core existente, con
+validación integrada, IAM temporal y destroy protegido por preview. Conserva
+identidades y APIs; segundo deploy con `changes=0` y ciclos IAM separados.
+Se conserva un binding Pub/Sub Editor preexistente; detalle en la evidencia 2.6.
 
 Comandos (Python 3.10+, gcloud autenticado y `config/dev.env` local):
 
 ```bash
-python3 -m infra.bootstrap.apis --mode validate
-python3 -m infra.iam.manage --mode validate
-python3 -m infra.pubsub.manage --mode deploy
-python3 -m infra.pubsub.manage --mode validate
-python3 -m infra.pubsub.manage --mode destroy  # Previsualización, no elimina
-python3 -m infra.storage.manage --mode deploy
-python3 -m infra.storage.manage --mode validate
-python3 -m infra.bigquery.manage --mode deploy
-python3 -m infra.bigquery.manage --mode validate
+./scripts/deploy_streaming_core.sh
+./scripts/validate_streaming_core.sh
+./scripts/destroy_streaming_core.sh  # Preview; puede usar IAM temporal
+# Eliminación explícita, únicamente con dataset y buckets vacíos:
+./scripts/destroy_streaming_core.sh --execute-destroy
 python3 -m unittest discover -s infra/tests -v
 ```
 
@@ -40,7 +36,8 @@ Documentación: [arquitectura](docs/architecture/architecture-overview.md),
 [contratos](docs/data/streaming-contracts.md), [plan](docs/plan/implementation-plan.md).
 Evidencias: [2.1](docs/progress/phase-2.1-bootstrap.md),
 [2.2](docs/progress/phase-2.2-iam.md), [2.3](docs/progress/phase-2.3-pubsub.md),
-[2.4](docs/progress/phase-2.4-storage.md), [2.5](docs/progress/phase-2.5-bigquery.md).
+[2.4](docs/progress/phase-2.4-storage.md), [2.5](docs/progress/phase-2.5-bigquery.md),
+[2.6](docs/progress/phase-2.6-integrated-deploy.md).
 Operación y eliminación: [Pub/Sub](infra/pubsub/README.md),
 [Storage y costo residual de Bronze](infra/storage/README.md),
 [BigQuery e IAM temporal](infra/bigquery/README.md).

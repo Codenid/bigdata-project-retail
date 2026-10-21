@@ -44,6 +44,7 @@ def bootstrap(config, apis, apply=False):
         return {service['config']['name'] for service in
                 run(config, 'services', 'list', '--enabled')}
     missing = sorted(set(apis) - enabled())
+    changes = len(missing) if apply else 0
     print(json.dumps({'missing_apis': missing, 'apply': apply}), flush=True)
     if missing and apply:
         # Se habilitan únicamente las APIs faltantes del manifiesto externo.
@@ -51,7 +52,8 @@ def bootstrap(config, apis, apply=False):
         missing = sorted(set(apis) - enabled())
     if missing:
         raise RuntimeError('APIs pendientes: ' + ', '.join(missing))
-    print('OK: bootstrap/APIs válido; IAM y recursos aún no aprovisionados.')
+    print('[OK] Bootstrap / APIs válido')
+    return {'changes': changes}
 
 
 def main():

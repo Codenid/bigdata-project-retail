@@ -75,8 +75,8 @@ Streaming core:
 
 ## Definition of Done
 ```bash
-./scripts/deploy_streaming.sh
-./scripts/validate_streaming_infra.sh
+./scripts/deploy_streaming_core.sh
+./scripts/validate_streaming_core.sh
 ```
 
 debe dejar toda la infraestructura lista sin intervención manual.

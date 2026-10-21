@@ -37,6 +37,8 @@ def check_forbidden(policy, manifest, members=None):
 
 
 def manage(config, resources, manifest, mode):
+    if manifest['viewer_role'] in manifest['forbidden_roles'] or manifest['token_role'] in manifest['forbidden_roles']:
+        raise ValueError('Rol prohibido en manifiesto')
     if set(manifest['accounts']) != {'RS-SEC-001', 'RS-SEC-002'}:
         raise ValueError('Solo se permiten las dos identidades catalogadas')
     accounts = emails(config, manifest)
@@ -110,8 +112,6 @@ def main():
     try:
         config, resources = load(args.config)
         manifest = json.loads(args.manifest.read_text())
-        if manifest['viewer_role'] in manifest['forbidden_roles'] or manifest['token_role'] in manifest['forbidden_roles']:
-            raise ValueError('Rol prohibido en manifiesto')
         manage(config, resources, manifest, args.mode)
     except (OSError, ValueError, KeyError, RuntimeError, subprocess.TimeoutExpired) as error:
         print('ERROR: ' + str(error), file=sys.stderr)

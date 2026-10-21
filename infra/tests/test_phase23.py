@@ -34,12 +34,10 @@ class Phase23(unittest.TestCase):
         if args[:2] == ('projects', 'get-iam-policy'):
             return copy.deepcopy(self.policy)
         if args[:2] == ('projects', 'add-iam-policy-binding'):
-            self.mutations.append(args)
             self.policy = {'bindings': [{'role': self.manifest['deployer_role'], 'members': [
                 'serviceAccount:' + self.config['DEPLOYER_SERVICE_ACCOUNT_ID'] + '@academic-test.iam.gserviceaccount.com']}]}
             return self.policy
         if args[:2] == ('projects', 'remove-iam-policy-binding'):
-            self.mutations.append(args)
             self.policy = {}
             return {}
         self.assertEqual(args[0], 'pubsub')
@@ -75,22 +73,21 @@ class Phase23(unittest.TestCase):
 
     def execute(self, mode, **kwargs):
         with patch('infra.pubsub.manage.run', side_effect=self.fake):
-            return manage(self.config, self.resources, self.manifest, mode, **kwargs)
+            return manage(self.config, self.resources, self.manifest, mode, **kwargs)['changes']
 
     def test_deploy_validate_repeat_destroy_recreate(self):
-        self.assertEqual(self.execute('deploy'), 4)  # binding + three resources
+        self.assertEqual(self.execute('deploy'), 3)  # three resources; IAM contabilizado por separado
         self.assertEqual(self.execute('validate'), 0)
         self.assertEqual(self.execute('deploy'), 0)
         count = len(self.mutations)
         self.assertEqual(self.execute('destroy'), 0)  # preview only
         self.assertEqual(len(self.mutations), count)
         self.assertEqual(self.execute('destroy', execute_destroy=True), 3)
-        self.assertEqual(self.execute('destroy', execute_destroy=True, remove_binding=True), 1)
-        self.assertEqual(self.execute('destroy', execute_destroy=True, remove_binding=True), 0)
-        self.assertEqual(self.execute('deploy'), 4)
+        self.assertEqual(self.execute('destroy', execute_destroy=True), 0)
+        self.assertEqual(self.execute('deploy'), 3)
 
-    def test_validate_missing_binding_never_mutates(self):
-        with self.assertRaisesRegex(RuntimeError, 'Falta binding'):
+    def test_validate_missing_resources_cleans_temporary_binding(self):
+        with self.assertRaisesRegex(RuntimeError, 'Recursos ausentes'):
             self.execute('validate')
         self.assertFalse(self.mutations)
 
@@ -186,6 +183,40 @@ class Phase23(unittest.TestCase):
 
     def test_runtime_never_receives_binding(self):
         self.execute('deploy')
-        assignments = [call for call in self.mutations if call[0] == 'projects']
+        assignments = [call for call in self.calls if call[:2] == ('projects', 'add-iam-policy-binding')]
         self.assertEqual(len(assignments), 1)
         self.assertNotIn(self.config['DATAFLOW_SERVICE_ACCOUNT_ID'], repr(assignments))
+
+    def test_temporary_binding_cleaned_on_success_and_failure(self):
+        with patch('infra.pubsub.manage.run', side_effect=self.fake):
+            stats = manage(self.config, self.resources, self.manifest, 'deploy')
+        self.assertEqual(stats['changes'], 3)
+        self.assertEqual(stats['iam_changes'], 2)
+        self.assertTrue(stats['temporary_binding_removed'])
+        self.assertFalse(self.policy)
+        next(iter(self.topics.values()))['labels'].pop('component_id')
+        with self.assertRaises(RuntimeError):
+            self.execute('validate')
+        self.assertFalse(self.policy)
+
+    def test_preexisting_binding_preserved(self):
+        self.fake(self.config, 'projects', 'add-iam-policy-binding')
+        original = copy.deepcopy(self.policy)
+        with patch('infra.pubsub.manage.run', side_effect=self.fake):
+            stats = manage(self.config, self.resources, self.manifest, 'deploy')
+        self.assertEqual(stats['iam_changes'], 0)
+        self.assertTrue(stats['preexisting_binding'])
+        self.assertEqual(self.policy, original)
+
+    def test_cleanup_error_reports_original_failure(self):
+        original = self.fake
+        def failure(config, *args):
+            if args[:2] == ('projects', 'remove-iam-policy-binding'):
+                raise RuntimeError('cleanup denied')
+            if args[:3] == ('pubsub', 'topics', 'list'):
+                raise RuntimeError('inventory denied')
+            return original(config, *args)
+        self.manifest['propagation_attempts'] = 1
+        with patch('infra.pubsub.manage.run', side_effect=failure):
+            with self.assertRaisesRegex(RuntimeError, 'cleanup denied.*inventory denied'):
+                manage(self.config, self.resources, self.manifest, 'deploy')

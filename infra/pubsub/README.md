@@ -21,8 +21,8 @@ python3 -m unittest discover -s infra/tests -v
 
 Deploy crea solo lo ausente y actualiza labels/propiedades si difieren. La
 segunda ejecución debe devolver changes=0. Los errores se propagan: si IAM aún
-no se propagó, reejecutar sin añadir roles. Validate es solo lectura y exige la
-configuración aprobada; no publica, consume ni confirma mensajes.
+no se propagó, reejecutar sin añadir roles. Validate no modifica recursos Pub/Sub y exige la
+configuración aprobada; puede conceder y retirar IAM temporal para inspección; no publica, consume ni confirma mensajes.
 
 Propiedades externas en config/dev.env.example: ack 60 s, retención 3600 s,
 retain acked false, expiración 604800 s y retry immediate (ausencia de retryPolicy).
@@ -42,7 +42,14 @@ infra/config/pubsub.json define el rol y las operaciones requeridas. El bootstra
 aplica roles/pubsub.editor al deployer a nivel proyecto y el script opera Pub/Sub
 mediante impersonación. Este permiso temporal es más amplio que mínimo estricto:
 permite gestionar otros recursos y publicar/consumir aunque el script no lo haga.
-Debe revisarse posteriormente. RS-SEC-001 no recibe permisos runtime. Se conservan
+Debe revisarse posteriormente. Desde 2.6, deploy/validate/destroy añaden el binding
+solo si falta y lo retiran en finally, confirmando la limpieza. Los bindings
+preexistentes, incluidos los heredados de ejecuciones anteriores, se conservan;
+se informa preexisting_binding=true y no se presume su procedencia.
+changes cuenta recursos; iam_changes cuenta altas/bajas temporales por separado.
+No ejecutar operaciones concurrentes sobre el mismo binding. SIGKILL o caída del
+host puede impedir finally; un fallo de cleanup se reporta como error.
+RS-SEC-001 no recibe permisos runtime. Se conservan
 los bindings de 2.2 y no se conceden roles Owner/Editor básicos ni IAM Admin.
 
 Los recursos vacíos sin tráfico tienen costo esperado prácticamente nulo. Tráfico,
@@ -54,21 +61,18 @@ script. Precios: https://cloud.google.com/pubsub/pricing
 ## Destroy y recreación
 
 ```bash
-# Previsualización, sin mutaciones:
+# Previsualización: sin borrar recursos; puede usar IAM temporal:
 python3 -m infra.pubsub.manage --mode destroy
 # Elimina la subscription y luego ambos tópicos, perdiendo mensajes pendientes:
 python3 -m infra.pubsub.manage --mode destroy --execute-destroy
-# Opcional: retirar también el binding temporal exacto mediante bootstrap:
-python3 -m infra.pubsub.manage --mode destroy --execute-destroy --remove-deployer-binding
-# Recrear (restaura el binding si se retiró):
+# Recrear:
 python3 -m infra.pubsub.manage --mode deploy
 ```
 
-No usar --remove-deployer-binding si otro despliegue depende de ese permiso.
-Destroy verifica los labels de pertenencia y rechaza subscriptions adicionales,
-incluso conectadas desde otro proyecto. Tolera recursos ausentes. Si se retiró
-el binding y aún quedan recursos, exige restaurarlo mediante deploy antes de
-eliminarlos. Las comprobaciones previas no bloquean cambios concurrentes externos;
+Destroy verifica labels de pertenencia y rechaza subscriptions adicionales,
+incluso conectadas desde otro proyecto. Tolera recursos ausentes. El binding
+creado por la operación se retira siempre; los preexistentes se conservan.
+Las comprobaciones previas no bloquean cambios concurrentes externos;
 ejecutar con productores/despliegues detenidos. No elimina cuentas, otros recursos
 ni APIs. No se ofrece purge de proyecto ni búsqueda por prefijos.
 

@@ -229,3 +229,12 @@ class Phase24(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 manage(self.config, self.resources, self.manifest, 'deploy')
         self.assertFalse(self.mutations)
+
+    def test_preview_rejects_nonempty_before_any_delete(self):
+        self.execute('deploy')
+        self.objects[self.resources['RS-DATA-001']['name']] = [{'name': 'retained', 'generation': '1'}]
+        count = len(self.mutations)
+        with self.assertRaisesRegex(RuntimeError, 'Bucket con datos'):
+            self.execute('destroy')
+        self.assertEqual(len(self.mutations), count)
+        self.assertFalse(self.policy['bindings'])
