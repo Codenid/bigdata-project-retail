@@ -1,0 +1,30 @@
+{
+  "api": "storage.googleapis.com",
+  "deployer_role": "roles/storage.admin",
+  "required_permissions": [
+    "storage.buckets.create", "storage.buckets.get", "storage.buckets.list",
+    "storage.buckets.update", "storage.buckets.delete", "storage.buckets.getIamPolicy",
+    "storage.objects.list", "storage.objects.delete"
+  ],
+  "approved": {
+    "STORAGE_CLASS": "STANDARD",
+    "STORAGE_UNIFORM_ACCESS": "true",
+    "STORAGE_PUBLIC_ACCESS_PREVENTION": "enforced",
+    "STORAGE_VERSIONING": "false",
+    "BRONZE_SOFT_DELETE_SECONDS": "604800",
+    "SILVER_SOFT_DELETE_SECONDS": "0",
+    "DATAFLOW_SOFT_DELETE_SECONDS": "0",
+    "DATAFLOW_TEMP_MAX_AGE_DAYS": "1"
+  },
+  "buckets": {
+    "RS-DATA-001": {"soft_delete_key": "BRONZE_SOFT_DELETE_SECONDS"},
+    "RS-DATA-002": {"soft_delete_key": "SILVER_SOFT_DELETE_SECONDS"},
+    "RS-STR-004": {
+      "soft_delete_key": "DATAFLOW_SOFT_DELETE_SECONDS",
+      "lifecycle_age_key": "DATAFLOW_TEMP_MAX_AGE_DAYS"
+    }
+  },
+  "request_timeout_seconds": 60,
+  "propagation_attempts": 6,
+  "propagation_delay_seconds": 10
+}

@@ -84,6 +84,39 @@ Los nueve recursos del Streaming Core de la fase 2 están aprobados para impleme
 
 ---
 
+### Diseño aprobado para FASE 2.4 — Storage
+
+- Solo RS-DATA-001, RS-DATA-002 y RS-STR-004, físicamente separados y con sufijo
+  externo. Nombres resueltos para dev/rsg: `rs-dev-data-gcs-bronze-rsg`,
+  `rs-dev-data-gcs-silver-rsg` y `rs-dev-str-gcs-dataflow-rsg`.
+- Scope regional, location `us-central1` por configuración, clase `STANDARD`,
+  acceso uniforme habilitado y Public Access Prevention `enforced`.
+- Cifrado administrado por Google; sin CMEK, versioning, Bucket Lock,
+  retention policy, Autoclass, replicación adicional ni cómputo.
+- Bronze: soft delete de 604800 segundos (7 días), sin lifecycle. Permite
+  recuperar originales tras eliminación accidental; los datos eliminados pueden
+  seguir generando costo durante recuperación.
+- Silver: soft delete deshabilitado, sin lifecycle; se reconstruye desde Bronze.
+- Dataflow Staging/Temp: soft delete deshabilitado y una sola regla lifecycle
+  `Delete` con `age=1`, para controlar acumulación técnica. La eliminación es
+  asíncrona, no un temporizador exacto; revisar antes de jobs prolongados.
+- RS-SEC-002 usa `roles/storage.admin` temporal a nivel proyecto, más amplio que
+  mínimo estricto. Bootstrap asigna el binding, impersona al deployer y retira en
+  finally únicamente el binding que faltaba al comenzar y creó la operación.
+  Los bindings preexistentes se conservan. No se otorgan permisos Storage a
+  RS-SEC-001; los accesos runtime quedan para el diseño Dataflow.
+- La implementación usa Python, gcloud para autenticación/IAM y la JSON API de
+  Cloud Storage para crear atómicamente buckets con labels y protecciones.
+  No se habilitan APIs adicionales ni se generan objetos de prueba o carpetas.
+- `changes` cuenta cambios persistentes de buckets; `iam_changes` registra por
+  separado asignación y retirada del permiso temporal. Reejecutar debe dejar
+  `changes=0` y la política IAM inicial restaurada.
+- Destroy previsualiza por defecto; eliminar datos requiere `--purge` además de
+  `--execute-destroy`. No se desactiva soft delete de Bronze para forzar borrado:
+  su recuperación y costo residual continúan según la política aprobada.
+
+---
+
 ## 3. Componentes de arquitectura aún no aprovisionados en la fase 2
 
 Estos componentes existen en la arquitectura, pero no deben implementarse todavía en el primer corte de infraestructura:
