@@ -45,8 +45,9 @@ La ubicación es regional y común en este corte. Los nombres provienen del
 catálogo Markdown, evitando duplicar un inventario de recursos. Las variables de
 entorno prevalecen sobre las claves presentes en el archivo env. El archivo se
 interpreta como KEY=VALUE literal: no admite comandos, expansión shell ni comillas.
-El ejemplo deja la residencia Pub/Sub bajo política organizacional y externaliza
-ack, retención y expiración; estas propiedades aún no se aplican a recursos.
+La fase 2.3 mantiene la residencia Pub/Sub bajo política por defecto, sin variables
+de residencia. Ack, retención y expiración están externalizados; bootstrap no
+aplica estas propiedades a recursos.
 
 Los tests usan un proyecto ficticio y un runner simulado: verifican rechazo de
 nombres ajenos, validación de configuración, idempotencia y ausencia de mutaciones

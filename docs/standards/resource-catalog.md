@@ -60,6 +60,30 @@ Los nueve recursos del Streaming Core de la fase 2 están aprobados para impleme
 
 ---
 
+### Diseño aprobado para FASE 2.3 — Pub/Sub
+
+- Se aprovisionan exclusivamente RS-STR-001, RS-STR-002 y RS-STR-003.
+- RS-STR-002 es pull sobre RS-STR-001: ack de 60 segundos, retención de 3600
+  segundos, sin retener mensajes confirmados, expiración de 604800 segundos
+  de inactividad y retry inmediato. Todos estos valores son configuración externa.
+- Ordering, exactly-once, DLQ, filtros, push y export quedan deshabilitados.
+  No se crean schemas, snapshots, subscriptions adicionales ni auditoría.
+- No se configura Message Storage Policy ni variables de residencia en este
+  corte. Pub/Sub conserva la política por defecto que determine GCP/organización;
+  scope global y location n/a no cambian.
+- Se aprueba temporalmente `roles/pubsub.editor` para RS-SEC-002 a nivel proyecto.
+  Es aprovisionamiento más amplio que mínimo estricto: permite otras operaciones
+  Pub/Sub además de las usadas por scripts y debe revisarse posteriormente.
+  No se concede administración IAM al deployer ni roles runtime a RS-SEC-001.
+- La retención de una hora puede descartar eventos no consumidos. La expiración
+  permite eliminar subscriptions inactivas; deploy las recrea. Revisar ambos
+  parámetros antes del E2E. No hay cómputo, retención de tópico ni features pagas
+  adicionales. El tráfico futuro puede generar cargos.
+- Deploy/validate/destroy se implementan en `infra/pubsub/`, vinculados al catálogo.
+  Destroy requiere ejecución explícita y elimina la subscription antes de tópicos.
+
+---
+
 ## 3. Componentes de arquitectura aún no aprovisionados en la fase 2
 
 Estos componentes existen en la arquitectura, pero no deben implementarse todavía en el primer corte de infraestructura:

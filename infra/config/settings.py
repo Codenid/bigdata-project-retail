@@ -80,9 +80,10 @@ def load(path):
     if not 600 <= retention <= 2678400:
         raise ValueError('MESSAGE_RETENTION_SECONDS fuera de rango')
     expiration = values['SUBSCRIPTION_EXPIRATION']
-    if expiration != 'never' and int(expiration) < max(86400, retention):
+    if expiration != 'never' and (int(expiration) < 86400 or int(expiration) <= retention):
         raise ValueError('SUBSCRIPTION_EXPIRATION insuficiente')
-    for region in filter(None, values.get('PUBSUB_ALLOWED_REGIONS', '').split(',')):
-        if not re.fullmatch(r'[a-z]+-[a-z]+[0-9]+', region):
-            raise ValueError('PUBSUB_ALLOWED_REGIONS inválido')
+    if 'RETAIN_ACKED_MESSAGES' in values and values['RETAIN_ACKED_MESSAGES'] != 'false':
+        raise ValueError('RETAIN_ACKED_MESSAGES debe ser false en fase 2.3')
+    if 'SUBSCRIPTION_RETRY_POLICY' in values and values['SUBSCRIPTION_RETRY_POLICY'] != 'immediate':
+        raise ValueError('Solo retry immediate está aprobado en fase 2.3')
     return values, resources

@@ -12,15 +12,15 @@ Mantener trazabilidad directa entre el diseño ArchiMate y el código.
 
 | ArchiMate | Tipo lógico | Implementación objetivo GCP | Artefacto de código esperado |
 |---|---|---|---|
-| Tópico Eventos Retail | Event bus | Cloud Pub/Sub Topic | `infra/streaming/` |
-| Ingesta Streaming | Ingesta | Pub/Sub + suscripción | `infra/streaming/` |
+| Tópico Eventos Retail | Event bus | Cloud Pub/Sub Topic | `infra/pubsub/` |
+| Ingesta Streaming | Ingesta | Pub/Sub + suscripción | `infra/pubsub/` |
 | [Stream Processor] Ingesta Streaming | Stream processor | Apache Beam sobre Dataflow | `pipelines/streaming/` |
 | Raw Event Writer | Writer lógico | salida del pipeline | `pipelines/streaming/` |
 | Bronze Eventos Raw | Data Object | Cloud Storage | `infra/storage/` |
 | Silver Event Writer | Writer lógico | salida del pipeline | `pipelines/streaming/` |
 | Silver Eventos Curados | Data Object | Cloud Storage | `infra/storage/` |
 | [Stream Processor] Procesamiento Tiempo Real | Stream processor | Apache Beam sobre Dataflow | `pipelines/streaming/` |
-| Tópico Insights Retail | Event bus | Cloud Pub/Sub Topic | `infra/streaming/` |
+| Tópico Insights Retail | Event bus | Cloud Pub/Sub Topic | `infra/pubsub/` |
 | Gold Insights Writer | Writer lógico | pipeline / sink | `pipelines/streaming/` |
 | Gold Insights Retail | Data Product | BigQuery | `infra/bigquery/` |
 
