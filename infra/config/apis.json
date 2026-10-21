@@ -1,0 +1,13 @@
+[
+  "serviceusage.googleapis.com",
+  "cloudresourcemanager.googleapis.com",
+  "iam.googleapis.com",
+  "iamcredentials.googleapis.com",
+  "pubsub.googleapis.com",
+  "storage.googleapis.com",
+  "bigquery.googleapis.com",
+  "dataflow.googleapis.com",
+  "compute.googleapis.com",
+  "logging.googleapis.com",
+  "monitoring.googleapis.com"
+]

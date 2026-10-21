@@ -1,0 +1,10 @@
+{
+  "accounts": {
+    "RS-SEC-001": {"key": "DATAFLOW_SERVICE_ACCOUNT_ID", "display_name": "RS-SEC-001 Identidad Dataflow"},
+    "RS-SEC-002": {"key": "DEPLOYER_SERVICE_ACCOUNT_ID", "display_name": "RS-SEC-002 Identidad de aprovisionamiento"}
+  },
+  "viewer_role": "roles/iam.serviceAccountViewer",
+  "viewer_permissions": ["iam.serviceAccounts.get", "iam.serviceAccounts.getIamPolicy"],
+  "token_role": "roles/iam.serviceAccountTokenCreator",
+  "forbidden_roles": ["roles/owner", "roles/editor", "roles/iam.serviceAccountAdmin", "roles/resourcemanager.projectIamAdmin"]
+}
