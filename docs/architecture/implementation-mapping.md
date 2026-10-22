@@ -39,9 +39,22 @@ GCP, cambia IAM, consume mensajes ni implementa procesamiento downstream.
 `producers/streaming/scenarios.json` define los seis perfiles; `scenarios.py`
 compone las fábricas con contexto determinístico y valida planes completos.
 `run_scenario.py` ofrece dry-run predeterminado y publicación explícita mediante
-el adaptador operativo existente. La aceptación de esta fase es solo local:
-46 eventos, sin publicaciones reales. No cambia contratos ni recursos GCP.
+el adaptador operativo existente. La aceptación local validó 46 eventos; posteriormente se publicaron los 46 con
+ACK de Pub/Sub documentados en la evidencia de Fase 3.3. No cambia contratos ni recursos GCP.
 NORMAL es baseline transversal; DELIVERY_DELAY impacta únicamente V1/V3.
+
+## Validación de recepción — FASE 3.4
+
+`consumers/streaming/pull_events.py` inspecciona únicamente RS-STR-002 mediante
+un pull REST acotado a 1–50 mensajes, con OPERATOR_ACCOUNT y sin ACK por defecto.
+`pubsub.py` comprueba acceso sin modificar IAM. `verify_phase33.py` contrasta la
+evidencia histórica, permite consolidación offline y no importa productores.
+El manifiesto de aceptación versionado contiene los 46 IDs/hash de Fase 3.3.
+ACK exige --verify-phase33 y coincidencia completa; no drena mensajes ajenos.
+No sustituye al componente de procesamiento streaming, no transforma eventos y
+no crea recursos. La inspección real inicial devolvió UNAVAILABLE (0/46), sin
+ACK ni republicación; no certifica expiración ni procesamiento downstream.
+La evidencia está en [Fase 3.4](../progress/phase-3.4-pubsub-reception.md).
 
 ## Eventos streaming
 

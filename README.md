@@ -16,11 +16,12 @@ especializado → Gold → consumidores.
 | 3.2 Productor CLI unitario | COMPLETADO |
 | 3.3 Escenarios controlados (validación local) | COMPLETADO |
 | Publicación real de escenarios | COMPLETADO: 46/46 ACK |
+| 3.4 Recepción Pub/Sub | IMPLEMENTADO; inspección UNAVAILABLE |
 | Fases posteriores | PENDIENTE |
 
-Último avance: publicación controlada de los seis escenarios, 46/46 mensajes
-aceptados por Pub/Sub y 155 pruebas correctas. Evidencia de event_id/message_id
-en el registro de Fase 3.3. Sin consumo ni validación downstream.
+Último avance: herramienta de inspección Pub/Sub con ACK protegido y 195 pruebas
+correctas. Una inspección real sin ACK recuperó 0 mensajes: UNAVAILABLE para la
+evidencia histórica. No se republicaron eventos ni se validó procesamiento downstream.
 
 Comandos: Python 3.10+; para infraestructura, gcloud autenticado y
 `config/dev.env` local. Los tests de contratos no requieren GCP.
@@ -34,6 +35,8 @@ Comandos: Python 3.10+; para infraestructura, gcloud autenticado y
 python3 -m pip install -r requirements-dev.txt
 python -m producers.streaming.send_event --type stock_event --dry-run
 python -m producers.streaming.run_scenario --scenario NORMAL --dry-run
+python -m consumers.streaming.pull_events --limit 46 --verify-phase33  # Sin ACK
+python3 -m unittest discover -s consumers/tests -v
 python3 -m unittest discover -s producers/tests -v
 python3 -m unittest discover -s contracts/tests -v
 python3 -m unittest discover -s infra/tests -v
@@ -49,8 +52,10 @@ Evidencias: [2.1](docs/progress/phase-2.1-bootstrap.md),
 [2.6](docs/progress/phase-2.6-integrated-deploy.md),
 [3.1](docs/progress/phase-3.1-event-contracts.md),
 [3.2](docs/progress/phase-3.2-unit-producer.md),
-[3.3](docs/progress/phase-3.3-controlled-scenarios.md).
+[3.3](docs/progress/phase-3.3-controlled-scenarios.md),
+[3.4](docs/progress/phase-3.4-pubsub-reception.md).
 Productor: [uso e identidad operativa](producers/streaming/README.md).
+Recepción: [inspección y ACK protegido](consumers/streaming/README.md).
 Escenarios: [perfiles, cronología y reproducción](docs/data/synthetic-scenarios.md).
 Operación y eliminación: [Pub/Sub](infra/pubsub/README.md),
 [Storage y costo residual de Bronze](infra/storage/README.md),
