@@ -17,11 +17,12 @@ especializado → Gold → consumidores.
 | 3.3 Escenarios controlados (validación local) | COMPLETADO |
 | Publicación real de escenarios | COMPLETADO: 46/46 ACK |
 | 3.4 Recepción Pub/Sub | IMPLEMENTADO; prueba fresca PARTIAL 4/6; ACK 0 |
+| Source Emulator V1 Streaming | COMPLETADO: demo 14/14 publicaciones |
 | Fases posteriores | PENDIENTE |
 
-Último avance: cobertura fresca PARTIAL 4/6; tres inspecciones adicionales
-autorizadas devolvieron cero mensajes y agotaron el límite. Cinco entregas
-acumuladas, un duplicado y ACKED=0. Las 195 pruebas pasan; sin cambios IAM o infraestructura.
+Último avance: Source Emulator local en Streamlit, seis fuentes, rate acotado y
+escenarios reutilizados. Demo real: 14 publicaciones confirmadas, 0 errores y
+0 workers activos al cierre. Sin Dataflow ni Batch.
 
 Comandos: Python 3.10+; para infraestructura, gcloud autenticado y
 `config/dev.env` local. Los tests de contratos no requieren GCP.
@@ -32,10 +33,12 @@ Comandos: Python 3.10+; para infraestructura, gcloud autenticado y
 ./scripts/destroy_streaming_core.sh  # Preview; puede usar IAM temporal
 # Eliminación explícita, únicamente con dataset y buckets vacíos:
 ./scripts/destroy_streaming_core.sh --execute-destroy
-python3 -m pip install -r requirements-dev.txt
+python3 -m pip install -r apps/requirements.txt
+streamlit run apps/source_emulator.py
 python -m producers.streaming.send_event --type stock_event --dry-run
 python -m producers.streaming.run_scenario --scenario NORMAL --dry-run
 python -m consumers.streaming.pull_events --limit 46 --verify-phase33  # Sin ACK
+python3 -m unittest discover -s producers/emulator/tests -v
 python3 -m unittest discover -s consumers/tests -v
 python3 -m unittest discover -s producers/tests -v
 python3 -m unittest discover -s contracts/tests -v
@@ -56,6 +59,8 @@ Evidencias: [2.1](docs/progress/phase-2.1-bootstrap.md),
 [3.4](docs/progress/phase-3.4-pubsub-reception.md).
 Productor: [uso e identidad operativa](producers/streaming/README.md).
 Recepción: [inspección y ACK protegido](consumers/streaming/README.md).
+Source Emulator: [operación y límites](apps/README.md),
+[evidencia V1](docs/progress/source-emulator-v1.md).
 Escenarios: [perfiles, cronología y reproducción](docs/data/synthetic-scenarios.md).
 Operación y eliminación: [Pub/Sub](infra/pubsub/README.md),
 [Storage y costo residual de Bronze](infra/storage/README.md),

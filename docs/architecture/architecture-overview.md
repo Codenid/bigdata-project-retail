@@ -323,3 +323,38 @@ Esta fase autoriza únicamente seis dry-runs, validación local de 46 eventos y
 pruebas simuladas de publicación. Las publicaciones reales de escenarios quedan
 pendientes de aprobación separada tras revisar el resultado local. Sin consumo,
 Producer Console, Dataflow ni procesamiento downstream.
+
+
+## Decisión arquitectónica — Source Emulator V1 Streaming
+
+Solicitud aprobada: aplicación local Python/Streamlit que representa las seis
+fuentes de solución y reutiliza fábricas, perfiles, contratos y publicación.
+Evoluciona la consola prevista en PASO 5 como Source Emulator, sin crear un
+componente GCP ni modificar el flujo de ingesta. No se implementan Batch o Dataflow.
+
+El Producer Engine es independiente de Streamlit: un worker controlado por
+fuente, sin cola acumulativa, ritmo máximo configurable con techo de 20 evt/s
+por fuente, límite de ejecución y lease de actividad de la sesión. STOP impide
+nuevos envíos y espera la operación en curso, con timeout; los threads salen al
+vencer lease o ventana de ejecución. El cierre del navegador se detecta por
+expiración del lease, no instantáneamente. El cierre explícito detiene el engine.
+
+La publicación del CLI continúa usando gcloud. El emulador reutiliza publish
+con un transporte REST intercambiable, token operativo obtenido por gcloud y
+retenido solo en memoria, sin retries ni impersonación. Destino único RS-STR-001,
+OPERATOR_ACCOUNT y permisos existentes. Un fallo detiene la fuente sin reenvío.
+El rate es objetivo/máximo; el ritmo observado depende de latencia de Pub/Sub.
+
+Modo libre: fábricas existentes, hechos independientes con IDs nuevos. Perfiles:
+plan completo prevalidado y finito; un único escenario compartido por ejecución
+preserva correlaciones entre fuentes. Solo se habilitan fuentes presentes en el
+perfil; no se mezclan escenarios activos. Los timestamps siguen el reloj
+sintético original del perfil; el rate regula emisión, sin reescribir los hechos.
+La UI identifica ese reloj simulado. La repetición inicia otro run_id, nunca
+reutiliza los IDs de una ejecución anterior. Escenario sigue fuera del evento.
+
+Overview/Streaming/Batch/Activity separan presentación de catálogo de fuentes y
+engine. Batch solo muestra Coming next. Registro en memoria de 50 eventos, sin
+tokens, credenciales o ackId. La demo autorizada publica stock y location a
+1 evt/s durante cinco segundos cada uno y cuatro muestras de TELEMETRY_ANOMALY;
+no consume mensajes, no asigna IAM ni habilita servicios adicionales.

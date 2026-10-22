@@ -137,3 +137,21 @@ Estos nombres deben conservarse cuando corresponda o documentarse si se ajustan.
 - Scripts idempotentes.
 - Todo recurso debe tener `deploy`, `validate` y, cuando aplique, `destroy`.
 - Las pruebas deben referenciar explícitamente el componente de arquitectura validado.
+
+
+## Source Emulator V1 Streaming
+
+`apps/source_emulator.py` representa las seis aplicaciones/dispositivos fuente
+mediante Streamlit local. `producers/emulator/sources.py` es catálogo de UI;
+`engine.py` contiene control por fuente, estado, rate, planes finitos, lease,
+parada y actividad acotada. `transport.py` publica REST en RS-STR-001 usando
+OPERATOR_ACCOUNT; reutiliza publish con transporte inyectable, mientras los CLI
+existentes conservan gcloud. build_event, scenarios y validate_event se reutilizan
+sin modificar contratos. `scripts/demo_source_emulator.py` ofrece una demo
+acotada, sin publicación por defecto y con --publish explícito.
+
+Decisión registrada previamente en architecture-overview.md. La herramienta es
+local y no añade recursos al Resource Catalog. Batch solo tiene navegación
+Coming next; Dataflow y recepción están fuera de alcance. Demo real: stock 5,
+location 5 y telemetry 4, cada uno con message_id confirmado. No modifica la
+evidencia histórica PARTIAL de recepción: esta demo no consume mensajes.

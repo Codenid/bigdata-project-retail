@@ -240,3 +240,13 @@ implementación debe:
 5. Identificar dependencias y permisos IAM mínimos.
 6. Excluir Batch, ML, Looker y Producer Console del alcance.
 7. Obtener revisión y aprobación antes de iniciar el desarrollo.
+
+
+## Corte aprobado — Source Emulator V1 Streaming
+
+Se adelanta el alcance local de PASO 5 por solicitud explícita: Python/Streamlit,
+seis aplicaciones/dispositivos fuente, engine desacoplado y publicación real
+controlada a RS-STR-001. START/STOP/SEND ONCE, ritmo acotado, seis escenarios
+reutilizados, métricas y actividad reciente. Batch es solo navegación Coming next.
+No condiciona ni autoriza Dataflow, nuevas infraestructuras o cambios IAM.
+La decisión y protecciones operativas están en architecture-overview.md.

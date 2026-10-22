@@ -58,11 +58,12 @@ def check_operator(config):
         raise RuntimeError('Override de credenciales/impersonación incompatible con OPERATOR_ACCOUNT; no se publica')
 
 
-def publish(config, resources, message):
+def publish(config, resources, message, *, transport=None):
     """Una invocación publish; no reintenta desde la aplicación ni usa IAM admin."""
     try:
-        response = _run(config, 'pubsub', 'topics', 'publish', target(config, resources),
-                        '--message=' + message, select_operator=True)
+        response = (transport(config, resources, message) if transport is not None else
+                    _run(config, 'pubsub', 'topics', 'publish', target(config, resources),
+                         '--message=' + message, select_operator=True))
     except subprocess.TimeoutExpired as error:
         raise PublicationError('Timeout: publicación no confirmada; puede haberse aceptado el mensaje. No reintentar automáticamente', True) from error
     except PermissionError as error:
