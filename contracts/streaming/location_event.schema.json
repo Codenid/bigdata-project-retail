@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:retailsmart:contracts:streaming:1.0:location_event",
+  "title": "location_event — v1",
+  "description": "Hechos observados por Tracking Logístico.",
+  "allOf": [
+    {
+      "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event"
+    }
+  ],
+  "properties": {
+    "event_type": {
+      "const": "location_event"
+    },
+    "source": {
+      "const": "logistics_tracking"
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "delivery_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Secuencia de observaciones de una entrega.",
+          "examples": [
+            "DEL-1009"
+          ]
+        },
+        "order_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Vincular con el pedido cuando exista su fuente.",
+          "examples": [
+            "ORD-7781"
+          ]
+        },
+        "vehicle_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Analizar movilidad y cuellos logísticos.",
+          "examples": [
+            "VEH-08"
+          ]
+        },
+        "latitude": {
+          "type": "number",
+          "description": "Latitud observada del vehículo; ejemplos ficticios.",
+          "examples": [
+            -12.087
+          ],
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "description": "Longitud observada del vehículo; ejemplos ficticios.",
+          "examples": [
+            -77.051
+          ],
+          "minimum": -180,
+          "maximum": 180
+        },
+        "delivery_status": {
+          "type": "string",
+          "description": "Estado observado; DELIVERED usa timestamp de confirmación.",
+          "examples": [
+            "IN_TRANSIT"
+          ],
+          "enum": [
+            "IN_TRANSIT",
+            "DELIVERED"
+          ]
+        },
+        "speed_kmh": {
+          "type": "number",
+          "description": "Movilidad y detenciones observadas.",
+          "examples": [
+            18.5
+          ],
+          "minimum": 0
+        },
+        "expected_delivery_timestamp": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/utc_timestamp",
+          "description": "Compromiso informado por origen, no ETA recalculada; puede estar vencido.",
+          "examples": [
+            "2026-10-21T13:00:00Z"
+          ]
+        }
+      },
+      "required": [
+        "delivery_id",
+        "order_id",
+        "vehicle_id",
+        "latitude",
+        "longitude",
+        "delivery_status",
+        "speed_kmh",
+        "expected_delivery_timestamp"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "event_id": "evt-iot_event-000001",
+  "event_type": "iot_event",
+  "schema_version": "1.0",
+  "event_timestamp": "2026-10-21T12:00:00Z",
+  "source": "store_iot_sensor",
+  "payload": {
+    "device_id": "IOT-001",
+    "store_id": "LIM-01",
+    "metric": "OCCUPANCY",
+    "value": 1.5,
+    "unit": "COUNT",
+    "status": "ACTIVE"
+  }
+}

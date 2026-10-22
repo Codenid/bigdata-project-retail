@@ -6,7 +6,7 @@ Definir un estándar simple, empresarial y consistente para identificar y nombra
 
 Este estándar debe revisarse antes de crear cualquier recurso.
 
-La arquitectura es la fuente de verdad. El nombre físico en GCP debe derivarse de un componente previamente definido en el diseño y registrado en el Resource Catalog.
+La Arquitectura de Solución es la fuente de verdad. El nombre físico en GCP debe derivarse de un componente previamente definido en el diseño y registrado en el Resource Catalog.
 
 ---
 
@@ -32,7 +32,7 @@ RS-SEC-001
 Este identificador se usa en:
 - documentación;
 - catálogo;
-- trazabilidad ArchiMate → GCP;
+- trazabilidad Arquitectura de Solución → GCP;
 - labels;
 - evidencias;
 - pruebas.
@@ -264,7 +264,7 @@ Motivos:
 Antes de crear cualquier recurso:
 
 ```text
-ArchiMate
+Arquitectura de Solución
    ↓
 Component ID
    ↓

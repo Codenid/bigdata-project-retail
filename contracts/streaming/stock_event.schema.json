@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:retailsmart:contracts:streaming:1.0:stock_event",
+  "title": "stock_event — v1",
+  "description": "Hechos observados por Estantería Inteligente.",
+  "allOf": [
+    {
+      "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event"
+    }
+  ],
+  "properties": {
+    "event_type": {
+      "const": "stock_event"
+    },
+    "source": {
+      "const": "smart_shelf"
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "store_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Localizar disponibilidad y reposición.",
+          "examples": [
+            "LIM-01"
+          ]
+        },
+        "product_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Correlacionar interés, stock y futuras ventas.",
+          "examples": [
+            "SKU-0042"
+          ]
+        },
+        "shelf_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Identificar posición física de la observación.",
+          "examples": [
+            "SHELF-17"
+          ]
+        },
+        "stock_quantity": {
+          "type": "integer",
+          "description": "Snapshot de unidades disponibles; no son ventas ni movimientos.",
+          "examples": [
+            4
+          ],
+          "minimum": 0
+        },
+        "stock_capacity": {
+          "type": "integer",
+          "description": "Capacidad para calcular proporción de ocupación.",
+          "examples": [
+            30
+          ],
+          "minimum": 1
+        }
+      },
+      "required": [
+        "store_id",
+        "product_id",
+        "shelf_id",
+        "stock_quantity",
+        "stock_capacity"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

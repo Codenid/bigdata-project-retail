@@ -3,6 +3,9 @@
 ## Objetivo
 
 Garantizar que cada fuente y cada evento tenga utilidad dentro del caso de negocio.
+La Arquitectura de Solución y el diseño aprobado de FASE 3.1 rigen esta matriz.
+IoT de tienda no se asocia a V4 en v1. Telemetría y sensores de almacén no se
+asocian a V3 mientras no exista un KPI operativo explícitamente definido.
 
 Leyenda:
 
@@ -13,11 +16,11 @@ Leyenda:
 | Fuente / Evento | V1 Tiempo Real | V2 Inventario | V3 Informes Operativos | V4 Mantenimiento |
 |---|:---:|:---:|:---:|:---:|
 | `clic_event` | P | S | P | — |
-| `iot_event` | P | — | S | S |
+| `iot_event` | P | — | S | — |
 | `stock_event` | P | P | S | — |
 | `location_event` | P | — | P | P |
-| `telemetry_event` | P | — | S | P |
-| `warehouse_sensor_event` | P | — | S | P |
+| `telemetry_event` | P | — | — | P |
+| `warehouse_sensor_event` | P | — | — | P |
 | ventas batch | — | P | P | — |
 | inventario batch | — | P | P | — |
 | tiendas batch | S | P | P | S |

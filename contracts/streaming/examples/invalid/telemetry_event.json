@@ -1,0 +1,15 @@
+{
+  "event_id": "evt-telemetry_event-000001",
+  "event_type": "telemetry_event",
+  "schema_version": "1.0",
+  "event_timestamp": "2026-10-21T12:00:00Z",
+  "source": "cold_room",
+  "payload": {
+    "device_id": "CAM-FRIO-018",
+    "warehouse_id": "WH-LIM-02",
+    "metric": "TEMPERATURE",
+    "value": 9.2,
+    "unit": "COUNT",
+    "status": "ACTIVE"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:retailsmart:contracts:streaming:1.0:common-event",
+  "title": "RetailSmart — Envelope común v1",
+  "type": "object",
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "not": {
+        "pattern": "\\s"
+      }
+    },
+    "utc_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:[0-5]\\d(?:\\.\\d+)?Z$",
+      "not": {
+        "pattern": "\\s"
+      }
+    }
+  },
+  "properties": {
+    "event_id": {
+      "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "clic_event",
+        "iot_event",
+        "stock_event",
+        "location_event",
+        "telemetry_event",
+        "warehouse_sensor_event"
+      ]
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "event_timestamp": {
+      "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/utc_timestamp"
+    },
+    "source": {
+      "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier"
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "event_id",
+    "event_type",
+    "schema_version",
+    "event_timestamp",
+    "source",
+    "payload"
+  ],
+  "additionalProperties": false
+}

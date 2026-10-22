@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:retailsmart:contracts:streaming:1.0:iot_event",
+  "title": "iot_event — v1",
+  "description": "Hechos observados por Sensores IoT de Tienda.",
+  "allOf": [
+    {
+      "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event"
+    }
+  ],
+  "properties": {
+    "event_type": {
+      "const": "iot_event"
+    },
+    "source": {
+      "const": "store_iot_sensor"
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "device_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Serie temporal del dispositivo.",
+          "examples": [
+            "IOT-001"
+          ]
+        },
+        "store_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Agrupar y correlacionar por tienda.",
+          "examples": [
+            "LIM-01"
+          ]
+        },
+        "metric": {
+          "type": "string",
+          "const": "OCCUPANCY",
+          "description": "Medición de ocupación.",
+          "examples": [
+            "OCCUPANCY"
+          ]
+        },
+        "value": {
+          "type": "integer",
+          "description": "Ocupación observada; no representa visitantes únicos.",
+          "examples": [
+            42
+          ],
+          "minimum": 0
+        },
+        "unit": {
+          "type": "string",
+          "const": "COUNT",
+          "description": "Unidad de conteo.",
+          "examples": [
+            "COUNT"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "description": "Estado observado del dispositivo o sensor.",
+          "examples": [
+            "ACTIVE"
+          ],
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ]
+        }
+      },
+      "required": [
+        "device_id",
+        "store_id",
+        "metric",
+        "value",
+        "unit",
+        "status"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

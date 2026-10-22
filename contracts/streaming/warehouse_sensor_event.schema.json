@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:retailsmart:contracts:streaming:1.0:warehouse_sensor_event",
+  "title": "warehouse_sensor_event — v1",
+  "description": "Hechos observados por Sensores de Almacén.",
+  "allOf": [
+    {
+      "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event"
+    }
+  ],
+  "properties": {
+    "event_type": {
+      "const": "warehouse_sensor_event"
+    },
+    "source": {
+      "const": "warehouse_sensor"
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "sensor_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Serie temporal del sensor.",
+          "examples": [
+            "WS-009"
+          ]
+        },
+        "warehouse_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Localizar contexto operativo.",
+          "examples": [
+            "WH-LIM-02"
+          ]
+        },
+        "equipment_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Agrupar sensores del mismo equipo.",
+          "examples": [
+            "CONVEYOR-12"
+          ]
+        },
+        "metric": {
+          "type": "string",
+          "const": "VIBRATION",
+          "description": "Variable de condición observada.",
+          "examples": [
+            "VIBRATION"
+          ]
+        },
+        "value": {
+          "type": "number",
+          "description": "Velocidad de vibración observada; valores altos son válidos.",
+          "examples": [
+            8.7
+          ],
+          "minimum": 0
+        },
+        "unit": {
+          "type": "string",
+          "const": "MM_S",
+          "description": "Velocidad de vibración en milímetros por segundo.",
+          "examples": [
+            "MM_S"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "description": "Estado observado del dispositivo o sensor.",
+          "examples": [
+            "ACTIVE"
+          ],
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ]
+        }
+      },
+      "required": [
+        "sensor_id",
+        "warehouse_id",
+        "equipment_id",
+        "metric",
+        "value",
+        "unit",
+        "status"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

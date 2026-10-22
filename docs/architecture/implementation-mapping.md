@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Mantener trazabilidad directa entre el diseño ArchiMate y el código.
+Mantener trazabilidad directa entre el diseño de la Arquitectura de Solución y el código.
 
 > **Regla:** si un recurso o servicio no puede vincularse con un componente del diseño, no debe incorporarse sin una decisión arquitectónica explícita.
 
@@ -10,7 +10,7 @@ Mantener trazabilidad directa entre el diseño ArchiMate y el código.
 
 ## Streaming
 
-| ArchiMate | Tipo lógico | Implementación objetivo GCP | Artefacto de código esperado |
+| Componente de solución | Tipo lógico | Implementación objetivo GCP | Artefacto de código esperado |
 |---|---|---|---|
 | Tópico Eventos Retail | Event bus | Cloud Pub/Sub Topic | `infra/pubsub/` |
 | Ingesta Streaming | Ingesta | Pub/Sub + suscripción | `infra/pubsub/` |
@@ -27,6 +27,12 @@ Mantener trazabilidad directa entre el diseño ArchiMate y el código.
 ---
 
 ## Eventos streaming
+
+FASE 3.1: los seis contratos usan `contracts/streaming/common-event.schema.json`.
+La validación estructural y semántica local está en
+`contracts/streaming/validation.py`; los ejemplos son artefactos de prueba,
+no productores. El detalle de campos y verticales está en
+[contratos](../data/streaming-contracts.md) y [matriz](../data/source-to-vertical-matrix.md).
 
 | Arquitectura | Origen | Contrato |
 |---|---|---|
@@ -50,7 +56,7 @@ Estos nombres deben conservarse cuando corresponda o documentarse si se ajustan.
 
 ## Batch
 
-| ArchiMate | Implementación objetivo |
+| Componente de solución | Implementación objetivo |
 |---|---|
 | [Batch Job] Ingesta Batch | Storage Transfer / scripts de carga |
 | Bronze Datos Batch | Cloud Storage |
@@ -68,7 +74,7 @@ Estos nombres deben conservarse cuando corresponda o documentarse si se ajustan.
 
 ## Mantenimiento predictivo
 
-| ArchiMate | Implementación objetivo |
+| Componente de solución | Implementación objetivo |
 |---|---|
 | [ML Job] Entrenamiento Mantenimiento Predictivo | Spark / PySpark |
 | [Model] Modelo Mantenimiento Predictivo | artefacto versionado |

@@ -1,0 +1,14 @@
+{
+  "event_id": "evt-clic_event-000001",
+  "event_type": "clic_event",
+  "schema_version": "1.0",
+  "event_timestamp": "2026-10-21T12:00:00Z",
+  "source": "channel_app",
+  "payload": {
+    "session_id": "SES-9001",
+    "customer_id": "CUS-SYN-1001",
+    "action": "VIEW_PRODUCT",
+    "channel": "MOBILE",
+    "store_id": "LIM-01"
+  }
+}

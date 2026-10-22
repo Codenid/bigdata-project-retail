@@ -9,7 +9,7 @@ RetailSmart implementa una plataforma de datos para soportar una operación omni
 3. **Informes operativos**
 4. **Mantenimiento proactivo**
 
-La arquitectura es la **fuente de verdad** para la implementación. Si durante el desarrollo se requiere cambiar un componente, evento, flujo o tecnología, primero debe registrarse la decisión y actualizarse la arquitectura.
+La Arquitectura de Solución es la **fuente de verdad** para la implementación. Si durante el desarrollo se requiere cambiar un componente, evento, flujo o tecnología, primero debe registrarse la decisión, actualizarse la Arquitectura de Solución y el catálogo/documentación, y recién después modificarse la implementación.
 
 ---
 
@@ -248,7 +248,7 @@ Gold / BigQuery → Reporting / BI.
 
 Toda implementación debe poder responder:
 
-1. ¿Qué componente ArchiMate implementa?
+1. ¿Qué componente de solución implementa?
 2. ¿Qué vertical habilita?
 3. ¿Qué dato recibe?
 4. ¿Qué dato produce?
@@ -257,3 +257,25 @@ Toda implementación debe poder responder:
 7. ¿Cómo se prueba?
 
 No se deben crear componentes o eventos nuevos sin registrar previamente el cambio de arquitectura.
+
+## Decisión arquitectónica — FASE 3.1: contratos de entrada v1
+
+Diseño aprobado: conservar exactamente los seis eventos de entrada y el envelope
+event_id, event_type, schema_version, event_timestamp, source y payload. Los
+contratos representan hechos de origen, sin scenario, vertical, KPI, insights,
+anomalías calculadas ni resultados de modelos. Fechas de evento en UTC; sin PII
+real en ejemplos o pruebas. No se implementan productores ni publicación.
+
+Se incorpora expected_delivery_timestamp a location_event como compromiso de
+entrega informado por el origen, para habilitar medición posterior de retrasos.
+No representa una ETA calculada ni una clasificación de retraso.
+
+Trazabilidad aprobada: iot_event habilita V1 principal y V3 secundaria, sin V4;
+telemetry_event y warehouse_sensor_event habilitan V1/V4 principales, sin V3 en
+v1 por no existir un KPI operativo explícito. Las demás asociaciones conservan
+la matriz aprobada. Las reglas de negocio, thresholds y modelos permanecen en
+capas posteriores; la coherencia cantidad/capacidad es validación del hecho.
+
+Gobierno: registrar decisión → actualizar Arquitectura de Solución → actualizar
+catálogo/documentación → modificar implementación. Los contratos locales no
+incorporan recursos GCP ni Schema Registry.

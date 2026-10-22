@@ -20,7 +20,7 @@ Productores paramétricos
 Batch / Predictivo / Consumo
 ```
 
-La arquitectura es la fuente de verdad.
+La Arquitectura de Solución es la fuente de verdad.
 
 ---
 
@@ -31,7 +31,7 @@ Congelar la correspondencia entre diseño y código.
 
 ## Alcance
 - architecture overview;
-- mapping ArchiMate → implementación;
+- mapping Arquitectura de Solución → implementación;
 - contratos de streaming;
 - matriz fuente → vertical.
 
@@ -212,7 +212,7 @@ docs/plan/implementation-plan.md
 
 Reglas:
 
-1. La arquitectura es fuente de verdad.
+1. La Arquitectura de Solución es fuente de verdad.
 2. No inventar eventos ni componentes.
 3. No modificar contratos sin documentar decisión.
 4. Trabajar únicamente en el paso solicitado.

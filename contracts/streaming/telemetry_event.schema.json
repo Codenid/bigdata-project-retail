@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:retailsmart:contracts:streaming:1.0:telemetry_event",
+  "title": "telemetry_event — v1",
+  "description": "Hechos observados por Cámaras Frigoríficas.",
+  "allOf": [
+    {
+      "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event"
+    }
+  ],
+  "properties": {
+    "event_type": {
+      "const": "telemetry_event"
+    },
+    "source": {
+      "const": "cold_room"
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "device_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Serie temporal del activo frigorífico.",
+          "examples": [
+            "CAM-FRIO-018"
+          ]
+        },
+        "warehouse_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Contexto operativo de almacén.",
+          "examples": [
+            "WH-LIM-02"
+          ]
+        },
+        "metric": {
+          "type": "string",
+          "const": "TEMPERATURE",
+          "description": "Variable térmica observada.",
+          "examples": [
+            "TEMPERATURE"
+          ]
+        },
+        "value": {
+          "type": "number",
+          "description": "Temperatura observada, incluidos valores negativos o anómalos.",
+          "examples": [
+            9.2
+          ]
+        },
+        "unit": {
+          "type": "string",
+          "const": "CELSIUS",
+          "description": "Temperatura en grados Celsius.",
+          "examples": [
+            "CELSIUS"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "description": "Estado observado del dispositivo o sensor.",
+          "examples": [
+            "ACTIVE"
+          ],
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ]
+        }
+      },
+      "required": [
+        "device_id",
+        "warehouse_id",
+        "metric",
+        "value",
+        "unit",
+        "status"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

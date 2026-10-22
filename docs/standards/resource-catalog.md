@@ -4,7 +4,7 @@
 
 Catálogo maestro de recursos de infraestructura RetailSmart.
 
-La arquitectura es la fuente de verdad.
+La Arquitectura de Solución es la fuente de verdad.
 
 > Ningún script debe crear un recurso que no esté previamente definido en este catálogo.
 
@@ -234,11 +234,11 @@ data_classification=internal
 
 Si Codex propone un recurso adicional:
 
-1. identificar qué componente de arquitectura representa;
-2. justificar por qué es necesario;
-3. registrar primero en este catálogo;
-4. aprobar;
-5. recién después implementar.
+1. registrar la decisión arquitectónica y justificar el componente de solución;
+2. actualizar la Arquitectura de Solución;
+3. actualizar este catálogo y la documentación relacionada;
+4. aprobar el diseño;
+5. recién después modificar la implementación.
 
 No crear infraestructura no catalogada.
 

@@ -1,0 +1,12 @@
+{
+  "event_id": "evt-clic_event-000002",
+  "event_type": "clic_event",
+  "schema_version": "1.0",
+  "event_timestamp": "2026-10-21T12:00:00Z",
+  "source": "channel_app",
+  "payload": {
+    "session_id": "SES-9002",
+    "action": "SEARCH",
+    "channel": "WEB"
+  }
+}

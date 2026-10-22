@@ -1,0 +1,14 @@
+{
+  "event_id": "evt-stock_event-000001",
+  "event_type": "stock_event",
+  "schema_version": "1.0",
+  "event_timestamp": "2026-10-21T12:00:00Z",
+  "source": "smart_shelf",
+  "payload": {
+    "store_id": "LIM-01",
+    "product_id": "SKU-0042",
+    "shelf_id": "SHELF-17",
+    "stock_quantity": -1,
+    "stock_capacity": 30
+  }
+}

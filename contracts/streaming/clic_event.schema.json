@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:retailsmart:contracts:streaming:1.0:clic_event",
+  "title": "clic_event — v1",
+  "description": "Hechos observados por Aplicaciones de Canal Web/App/POS.",
+  "allOf": [
+    {
+      "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event"
+    }
+  ],
+  "properties": {
+    "event_type": {
+      "const": "clic_event"
+    },
+    "source": {
+      "const": "channel_app"
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "session_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Agrupar navegación y funnel por sesión.",
+          "examples": [
+            "SES-9001"
+          ]
+        },
+        "customer_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Recurrencia entre sesiones de una identidad ficticia; opcional.",
+          "examples": [
+            "CUS-SYN-1001"
+          ]
+        },
+        "product_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Interés por producto y correlación con stock; requerido salvo SEARCH.",
+          "examples": [
+            "SKU-0042"
+          ]
+        },
+        "action": {
+          "type": "string",
+          "description": "Contabilizar interacciones e intención.",
+          "examples": [
+            "VIEW_PRODUCT"
+          ],
+          "enum": [
+            "CLICK",
+            "VIEW_PRODUCT",
+            "SEARCH",
+            "ADD_TO_CART"
+          ]
+        },
+        "channel": {
+          "type": "string",
+          "description": "Comparar comportamiento por canal.",
+          "examples": [
+            "MOBILE"
+          ],
+          "enum": [
+            "WEB",
+            "MOBILE",
+            "POS"
+          ]
+        },
+        "store_id": {
+          "$ref": "urn:retailsmart:contracts:streaming:1.0:common-event#/$defs/identifier",
+          "description": "Tienda asociada cuando es conocida; no inventar contexto.",
+          "examples": [
+            "LIM-01"
+          ]
+        }
+      },
+      "required": [
+        "session_id",
+        "action",
+        "channel"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "enum": [
+                  "CLICK",
+                  "VIEW_PRODUCT",
+                  "ADD_TO_CART"
+                ]
+              }
+            },
+            "required": [
+              "action"
+            ]
+          },
+          "then": {
+            "required": [
+              "product_id"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "event_id": "evt-location_event-000001",
+  "event_type": "location_event",
+  "schema_version": "1.0",
+  "event_timestamp": "2026-10-21T12:00:00Z",
+  "source": "logistics_tracking",
+  "payload": {
+    "delivery_id": "DEL-1009",
+    "order_id": "ORD-7781",
+    "vehicle_id": "VEH-08",
+    "latitude": -12.087,
+    "longitude": -77.051,
+    "delivery_status": "IN_TRANSIT",
+    "speed_kmh": 18.5
+  }
+}

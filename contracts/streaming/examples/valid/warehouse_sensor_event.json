@@ -1,0 +1,16 @@
+{
+  "event_id": "evt-warehouse_sensor_event-000001",
+  "event_type": "warehouse_sensor_event",
+  "schema_version": "1.0",
+  "event_timestamp": "2026-10-21T12:00:00Z",
+  "source": "warehouse_sensor",
+  "payload": {
+    "sensor_id": "WS-009",
+    "warehouse_id": "WH-LIM-02",
+    "equipment_id": "CONVEYOR-12",
+    "metric": "VIBRATION",
+    "value": 8.7,
+    "unit": "MM_S",
+    "status": "ACTIVE"
+  }
+}
