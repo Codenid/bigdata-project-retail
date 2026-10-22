@@ -16,12 +16,12 @@ especializado → Gold → consumidores.
 | 3.2 Productor CLI unitario | COMPLETADO |
 | 3.3 Escenarios controlados (validación local) | COMPLETADO |
 | Publicación real de escenarios | COMPLETADO: 46/46 ACK |
-| 3.4 Recepción Pub/Sub | IMPLEMENTADO; inspección UNAVAILABLE |
+| 3.4 Recepción Pub/Sub | IMPLEMENTADO; prueba fresca PARTIAL 4/6; ACK 0 |
 | Fases posteriores | PENDIENTE |
 
-Último avance: herramienta de inspección Pub/Sub con ACK protegido y 195 pruebas
-correctas. Una inspección real sin ACK recuperó 0 mensajes: UNAVAILABLE para la
-evidencia histórica. No se republicaron eventos ni se validó procesamiento downstream.
+Último avance: seis eventos frescos publicados, cuatro únicos recibidos y válidos;
+ACKED=0 porque faltan dos por comprobar. Cierre funcional pendiente de autorizar
+inspecciones adicionales. Las 195 pruebas pasan; sin cambios de infraestructura o IAM.
 
 Comandos: Python 3.10+; para infraestructura, gcloud autenticado y
 `config/dev.env` local. Los tests de contratos no requieren GCP.

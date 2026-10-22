@@ -54,6 +54,9 @@ ACK exige --verify-phase33 y coincidencia completa; no drena mensajes ajenos.
 No sustituye al componente de procesamiento streaming, no transforma eventos y
 no crea recursos. La inspección real inicial devolvió UNAVAILABLE (0/46), sin
 ACK ni republicación; no certifica expiración ni procesamiento downstream.
+La prueba fresca posterior publicó seis eventos unitarios: dos inspecciones
+manuales observaron cuatro únicos válidos y ninguna envió ACK; el cierre
+funcional permanece pendiente. No modifica la protección del CLI ni el manifiesto histórico.
 La evidencia está en [Fase 3.4](../progress/phase-3.4-pubsub-reception.md).
 
 ## Eventos streaming
