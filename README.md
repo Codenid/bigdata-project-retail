@@ -15,12 +15,12 @@ especializado → Gold → consumidores.
 | 3.1 Event Contracts | COMPLETADO |
 | 3.2 Productor CLI unitario | COMPLETADO |
 | 3.3 Escenarios controlados (validación local) | COMPLETADO |
-| Publicación real de escenarios | PENDIENTE DE APROBACIÓN |
+| Publicación real de escenarios | COMPLETADO: 46/46 ACK |
 | Fases posteriores | PENDIENTE |
 
-Último avance: seis escenarios determinísticos, con 46 eventos canónicos validados
-localmente y 155 pruebas correctas. NORMAL es baseline transversal de operación;
-DELIVERY_DELAY usa V1/V3. No se publicaron eventos reales de escenarios.
+Último avance: publicación controlada de los seis escenarios, 46/46 mensajes
+aceptados por Pub/Sub y 155 pruebas correctas. Evidencia de event_id/message_id
+en el registro de Fase 3.3. Sin consumo ni validación downstream.
 
 Comandos: Python 3.10+; para infraestructura, gcloud autenticado y
 `config/dev.env` local. Los tests de contratos no requieren GCP.
