@@ -19,9 +19,9 @@ especializado → Gold → consumidores.
 | 3.4 Recepción Pub/Sub | IMPLEMENTADO; prueba fresca PARTIAL 4/6; ACK 0 |
 | Fases posteriores | PENDIENTE |
 
-Último avance: seis eventos frescos publicados, cuatro únicos recibidos y válidos;
-ACKED=0 porque faltan dos por comprobar. Cierre funcional pendiente de autorizar
-inspecciones adicionales. Las 195 pruebas pasan; sin cambios de infraestructura o IAM.
+Último avance: cobertura fresca PARTIAL 4/6; tres inspecciones adicionales
+autorizadas devolvieron cero mensajes y agotaron el límite. Cinco entregas
+acumuladas, un duplicado y ACKED=0. Las 195 pruebas pasan; sin cambios IAM o infraestructura.
 
 Comandos: Python 3.10+; para infraestructura, gcloud autenticado y
 `config/dev.env` local. Los tests de contratos no requieren GCP.

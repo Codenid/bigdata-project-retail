@@ -172,8 +172,72 @@
 - **Archivos modificados en esta validación:** esta evidencia, README.md y
   docs/architecture/implementation-mapping.md. Sin cambios en código versionado,
   manifiesto histórico, infraestructura, IAM, retención o ack deadline.
-- **Estado final de la prueba fresca:** **PARTIAL (4/6 únicos válidos), ACKED=0**.
+- **Estado antes de las inspecciones adicionales:** **PARTIAL (4/6 únicos válidos), ACKED=0**.
   El cierre funcional solicitado todavía no está demostrado. Se requiere
   autorización explícita para inspecciones adicionales de los seis mensajes
   existentes y su confirmación protegida tras comprobar el conjunto completo.
   No se deben republicar estos eventos. No se avanzó a Dataflow u otra fase.
+
+
+## Inspecciones adicionales autorizadas — 2026-10-22 UTC
+
+- **Objetivo y límite:** intentar completar los seis eventos frescos existentes,
+  con máximo tres pulls adicionales independientes, límite 10 sobre RS-STR-002.
+  Autorización expresa SIN ACK, sin republicación, retries automáticos, cambios
+  IAM/infraestructura ni reutilización de ackId anteriores. Se detendría al
+  alcanzar 6/6; no se alcanzó y se agotaron exactamente las tres inspecciones.
+- **Ejecución:** una invocación puntual por inspección, reutilizando el adaptador
+  y validador existentes. OPERATOR_ACCOUNT y acceso consume comprobados antes
+  de cada pull. El adaptador temporal bloqueó acknowledge y cualquier operación
+  HTTP distinta de testIamPermissions/pull. No guardó ni reutilizó ackId.
+  Los seis esperados y hashes se derivaron de esta evidencia versionada; los
+  reportes previos se contrastaron con el baseline de cinco entregas/cuatro
+  únicos. Sin cambios en código versionado ni manifiesto histórico Fase 3.3.
+
+| Pull adicional | Inspección global | UTC de finalización | Límite | Entregas nuevas | Válidos nuevos | Cobertura acumulada | ACK |
+|---|---:|---|---:|---:|---:|---|---:|
+| 1 | 3 | 2026-10-22T12:19:39.453661Z | 10 | 0 | 0 | 4/6 | 0 |
+| 2 | 4 | 2026-10-22T12:20:30.009991Z | 10 | 0 | 0 | 4/6 | 0 |
+| 3 | 5 | 2026-10-22T12:21:20.567885Z | 10 | 0 | 0 | 4/6 | 0 |
+
+- **Acumulación:** correspondencia por event_id, message_id, event_type,
+  event_timestamp, schema_version y hash canónico esperado, sin asumir orden.
+  Los duplicados no incrementan cobertura; mismo event_id y hash se cuentan
+  como redelivery, y contenido distinto para el mismo ID se considera conflicto.
+
+| Métrica final | Resultado |
+|---|---:|
+| Inspecciones adicionales ejecutadas / autorizadas | 3 / 3 |
+| Inspecciones totales de la prueba fresca | 5 |
+| Entregas en las tres adicionales | 0 |
+| Deliveries acumuladas | 5 |
+| Deliveries válidas acumuladas | 5 |
+| Eventos esperados únicos válidos | 4 |
+| Duplicados acumulados | 1 |
+| Conflictos acumulados | 0 |
+| Inválidos / ajenos | 0 / 0 |
+| Cobertura final | **4/6** |
+| ACK enviados | **0** |
+| Estado final | **PARTIAL** |
+
+**Faltantes exactos:**
+
+| event_type | event_id | message_id publicado | SHA-256 esperado |
+|---|---|---|---|
+| location_event | e1418141-5689-4cfb-8606-edd9258326dc | 22072742644624631 | 6e945ffae54e76779aa109479b2185ed02a0aee3da4de2a98dc6fea8c3075e8a |
+| warehouse_sensor_event | 3cdf148f-6592-4bee-947f-9ebac6328ef9 | 23178500500208427 | 703d62667376a11105070022f80a0d3a487e918860ec7c96643038ad6a9eb593 |
+
+- **Resultado y errores:** las tres operaciones terminaron correctamente, sin
+  errores de transporte ni permisos; los lotes fueron vacíos. Las publicaciones
+  originales son de aproximadamente 06:00 UTC y estas inspecciones ocurrieron
+  después de 12:18 UTC, fuera de la ventana configurada de 3600 segundos.
+  El resultado vacío no demuestra por sí solo expiración ni ausencia de backlog.
+  No se afirmó recepción de location_event o warehouse_sensor_event.
+- **Pruebas y seguridad:** suite completa: **195 correctas** (40 consumidores,
+  54 productores, 21 contratos, 80 infraestructura). Revisión de secretos sin
+  hallazgos; config/dev.env ignorado y config/dev.env.example versionado.
+  Solo se actualizan esta evidencia, README y mapping de implementación.
+- **Estado final:** **PARTIAL (4/6)**, máximo de inspecciones consumido; se
+  detuvieron los pulls sin ampliar el número ni republicar. No se ejecutó ACK
+  individual, por subconjuntos ni completo. Cualquier limpieza controlada queda
+  separada y requiere autorización específica. Sin avance a Dataflow u otra fase.
