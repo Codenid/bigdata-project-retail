@@ -299,3 +299,27 @@ de fixtures o ejemplos. Los schemas versionados y validate_event son la autorida
 sobre tipos, enums, restricciones y coherencia del contrato. Un compromiso nuevo
 se asocia a una entrega ficticia nueva; no se desplaza el compromiso de una misma
 entrega. La publicación gcloud queda desacoplada de la construcción de eventos.
+
+## Decisión arquitectónica — FASE 3.3: escenarios sintéticos controlados
+
+Diseño aprobado: seis perfiles pequeños (18/12/3/4/4/5 eventos; 46 en total),
+valores fijos sin aleatoriedad, seed ni count. Contexto opcional de las fábricas
+para run_id/start_time e identificadores determinísticos, compatible con el CLI
+unitario. Schemas y validate_event permanecen sin cambios. Antes de cualquier
+publicación explícita se valida y serializa todo el plan, incluidas relaciones
+temporales y de identificadores. Dry-run predeterminado, completamente local.
+
+NORMAL es un **baseline transversal de operación**: incluye las fuentes de las
+cuatro verticales, sin representar un insight único compartido. DELIVERY_DELAY
+se asocia solo a V1/V3 principales; no representa mantenimiento ni falla mecánica.
+Telemetría y degradación de almacén mantienen V1/V4 principales, sin V3.
+
+Los nombres de escenarios pertenecen al plan/reporte local y nunca al envelope,
+payload, identificadores legibles ni atributos Pub/Sub. Se reutilizan las seis
+fábricas, validate_event y el adaptador operativo OPERATOR_ACCOUNT/RS-STR-001.
+No hay retries propios, rate control, ordering garantizado ni recursos nuevos.
+
+Esta fase autoriza únicamente seis dry-runs, validación local de 46 eventos y
+pruebas simuladas de publicación. Las publicaciones reales de escenarios quedan
+pendientes de aprobación separada tras revisar el resultado local. Sin consumo,
+Producer Console, Dataflow ni procesamiento downstream.

@@ -34,6 +34,15 @@ sin leer ejemplos; `publish.py` adapta gcloud y la identidad OPERATOR_ACCOUNT.
 Reutiliza el validador oficial y publica únicamente en RS-STR-001. No crea recursos
 GCP, cambia IAM, consume mensajes ni implementa procesamiento downstream.
 
+## Escenarios sintéticos — FASE 3.3
+
+`producers/streaming/scenarios.json` define los seis perfiles; `scenarios.py`
+compone las fábricas con contexto determinístico y valida planes completos.
+`run_scenario.py` ofrece dry-run predeterminado y publicación explícita mediante
+el adaptador operativo existente. La aceptación de esta fase es solo local:
+46 eventos, sin publicaciones reales. No cambia contratos ni recursos GCP.
+NORMAL es baseline transversal; DELIVERY_DELAY impacta únicamente V1/V3.
+
 ## Eventos streaming
 
 FASE 3.1: los seis contratos usan `contracts/streaming/common-event.schema.json`.

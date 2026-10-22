@@ -111,3 +111,20 @@ cómputo, APIs nuevas ni procesamiento Bronze/Silver/Gold en esta fase.
 Referencias: [publicación gcloud](https://docs.cloud.google.com/sdk/gcloud/reference/pubsub/topics/publish),
 [cuenta activa](https://docs.cloud.google.com/sdk/gcloud/reference/auth/list),
 [IAM Pub/Sub](https://docs.cloud.google.com/pubsub/docs/access-control).
+
+
+## Escenarios controlados — FASE 3.3
+
+Las fábricas incorporan un contexto opcional determinístico; el CLI unitario y
+sus defaults permanecen iguales. El nuevo CLI run_scenario es dry-run por defecto:
+
+```bash
+python -m producers.streaming.run_scenario --scenario NORMAL --dry-run
+```
+
+Los seis perfiles contienen 18/12/3/4/4/5 eventos (46 canónicos), sin seed, count o
+rate. Se valida el plan completo antes de cualquier publicación explícita y se
+reutilizan validate_event y publish.py. Los nombres de escenarios no van en
+mensajes ni atributos. Publicación real de escenarios pendiente de aprobación;
+aceptación actual exclusivamente local. Detalle en
+[escenarios sintéticos](../../docs/data/synthetic-scenarios.md).

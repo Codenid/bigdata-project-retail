@@ -1,0 +1,504 @@
+{
+  "version": "1.0",
+  "defaults": {
+    "run_id": "demo-001",
+    "start_time": "2026-10-21T12:00:00Z"
+  },
+  "profiles": {
+    "NORMAL": {
+      "description": "baseline transversal de operación",
+      "verticals": {
+        "V1": "principal",
+        "V2": "principal",
+        "V3": "principal",
+        "V4": "principal"
+      },
+      "steps": [
+        {
+          "event_type": "clic_event",
+          "offset_seconds": 0,
+          "values": {
+            "action": "VIEW_PRODUCT"
+          }
+        },
+        {
+          "event_type": "iot_event",
+          "offset_seconds": 0,
+          "values": {
+            "value": 12,
+            "status": "ACTIVE"
+          },
+          "entities": {
+            "device_id": "store-iot-device"
+          }
+        },
+        {
+          "event_type": "stock_event",
+          "offset_seconds": 0,
+          "values": {
+            "stock_quantity": 30,
+            "stock_capacity": 40
+          }
+        },
+        {
+          "event_type": "location_event",
+          "offset_seconds": 0,
+          "values": {
+            "latitude": -12.087,
+            "longitude": -77.051,
+            "speed_kmh": 4.7,
+            "delivery_status": "IN_TRANSIT"
+          },
+          "commitment_offset_seconds": 120
+        },
+        {
+          "event_type": "telemetry_event",
+          "offset_seconds": 0,
+          "values": {
+            "value": 4.5,
+            "status": "ACTIVE"
+          },
+          "entities": {
+            "device_id": "cold-room-device"
+          }
+        },
+        {
+          "event_type": "warehouse_sensor_event",
+          "offset_seconds": 0,
+          "values": {
+            "value": 2.5,
+            "status": "ACTIVE"
+          }
+        },
+        {
+          "event_type": "clic_event",
+          "offset_seconds": 60,
+          "values": {
+            "action": "CLICK"
+          }
+        },
+        {
+          "event_type": "iot_event",
+          "offset_seconds": 60,
+          "values": {
+            "value": 13,
+            "status": "ACTIVE"
+          },
+          "entities": {
+            "device_id": "store-iot-device"
+          }
+        },
+        {
+          "event_type": "stock_event",
+          "offset_seconds": 60,
+          "values": {
+            "stock_quantity": 29,
+            "stock_capacity": 40
+          }
+        },
+        {
+          "event_type": "location_event",
+          "offset_seconds": 60,
+          "values": {
+            "latitude": -12.0865,
+            "longitude": -77.0505,
+            "speed_kmh": 4.7,
+            "delivery_status": "IN_TRANSIT"
+          },
+          "commitment_offset_seconds": 120
+        },
+        {
+          "event_type": "telemetry_event",
+          "offset_seconds": 60,
+          "values": {
+            "value": 4.6,
+            "status": "ACTIVE"
+          },
+          "entities": {
+            "device_id": "cold-room-device"
+          }
+        },
+        {
+          "event_type": "warehouse_sensor_event",
+          "offset_seconds": 60,
+          "values": {
+            "value": 2.6,
+            "status": "ACTIVE"
+          }
+        },
+        {
+          "event_type": "clic_event",
+          "offset_seconds": 120,
+          "values": {
+            "action": "ADD_TO_CART"
+          }
+        },
+        {
+          "event_type": "iot_event",
+          "offset_seconds": 120,
+          "values": {
+            "value": 12,
+            "status": "ACTIVE"
+          },
+          "entities": {
+            "device_id": "store-iot-device"
+          }
+        },
+        {
+          "event_type": "stock_event",
+          "offset_seconds": 120,
+          "values": {
+            "stock_quantity": 28,
+            "stock_capacity": 40
+          }
+        },
+        {
+          "event_type": "location_event",
+          "offset_seconds": 120,
+          "values": {
+            "latitude": -12.086,
+            "longitude": -77.05,
+            "speed_kmh": 0,
+            "delivery_status": "DELIVERED"
+          },
+          "commitment_offset_seconds": 120
+        },
+        {
+          "event_type": "telemetry_event",
+          "offset_seconds": 120,
+          "values": {
+            "value": 4.5,
+            "status": "ACTIVE"
+          },
+          "entities": {
+            "device_id": "cold-room-device"
+          }
+        },
+        {
+          "event_type": "warehouse_sensor_event",
+          "offset_seconds": 120,
+          "values": {
+            "value": 2.5,
+            "status": "ACTIVE"
+          }
+        }
+      ]
+    },
+    "HIGH_DEMAND": {
+      "description": "Interés concentrado, mayor ocupación y descenso de disponibilidad; no implica ventas.",
+      "verticals": {
+        "V1": "principal",
+        "V2": "principal",
+        "V3": "principal"
+      },
+      "steps": [
+        {
+          "event_type": "clic_event",
+          "offset_seconds": 0,
+          "values": {
+            "action": "VIEW_PRODUCT"
+          },
+          "entities": {
+            "session_id": "session-a"
+          }
+        },
+        {
+          "event_type": "iot_event",
+          "offset_seconds": 0,
+          "values": {
+            "value": 12,
+            "status": "ACTIVE"
+          },
+          "entities": {
+            "device_id": "store-iot-device"
+          }
+        },
+        {
+          "event_type": "stock_event",
+          "offset_seconds": 0,
+          "values": {
+            "stock_quantity": 30,
+            "stock_capacity": 40
+          }
+        },
+        {
+          "event_type": "clic_event",
+          "offset_seconds": 10,
+          "values": {
+            "action": "ADD_TO_CART"
+          },
+          "entities": {
+            "session_id": "session-a"
+          }
+        },
+        {
+          "event_type": "clic_event",
+          "offset_seconds": 20,
+          "values": {
+            "action": "VIEW_PRODUCT"
+          },
+          "entities": {
+            "session_id": "session-b"
+          }
+        },
+        {
+          "event_type": "clic_event",
+          "offset_seconds": 30,
+          "values": {
+            "action": "ADD_TO_CART"
+          },
+          "entities": {
+            "session_id": "session-b"
+          }
+        },
+        {
+          "event_type": "clic_event",
+          "offset_seconds": 40,
+          "values": {
+            "action": "VIEW_PRODUCT"
+          },
+          "entities": {
+            "session_id": "session-c"
+          }
+        },
+        {
+          "event_type": "clic_event",
+          "offset_seconds": 50,
+          "values": {
+            "action": "ADD_TO_CART"
+          },
+          "entities": {
+            "session_id": "session-c"
+          }
+        },
+        {
+          "event_type": "iot_event",
+          "offset_seconds": 60,
+          "values": {
+            "value": 24,
+            "status": "ACTIVE"
+          },
+          "entities": {
+            "device_id": "store-iot-device"
+          }
+        },
+        {
+          "event_type": "stock_event",
+          "offset_seconds": 60,
+          "values": {
+            "stock_quantity": 22,
+            "stock_capacity": 40
+          }
+        },
+        {
+          "event_type": "iot_event",
+          "offset_seconds": 120,
+          "values": {
+            "value": 36,
+            "status": "ACTIVE"
+          },
+          "entities": {
+            "device_id": "store-iot-device"
+          }
+        },
+        {
+          "event_type": "stock_event",
+          "offset_seconds": 120,
+          "values": {
+            "stock_quantity": 14,
+            "stock_capacity": 40
+          }
+        }
+      ]
+    },
+    "LOW_STOCK": {
+      "description": "Disponibilidad reducida hasta quiebre observado, sin threshold de alerta.",
+      "verticals": {
+        "V1": "principal",
+        "V2": "principal",
+        "V3": "secundaria"
+      },
+      "steps": [
+        {
+          "event_type": "stock_event",
+          "offset_seconds": 0,
+          "values": {
+            "stock_quantity": 8,
+            "stock_capacity": 40
+          }
+        },
+        {
+          "event_type": "stock_event",
+          "offset_seconds": 60,
+          "values": {
+            "stock_quantity": 3,
+            "stock_capacity": 40
+          }
+        },
+        {
+          "event_type": "stock_event",
+          "offset_seconds": 120,
+          "values": {
+            "stock_quantity": 0,
+            "stock_capacity": 40
+          }
+        }
+      ]
+    },
+    "DELIVERY_DELAY": {
+      "description": "Retraso y cuello logístico, sin mantenimiento ni falla mecánica.",
+      "verticals": {
+        "V1": "principal",
+        "V3": "principal"
+      },
+      "steps": [
+        {
+          "event_type": "location_event",
+          "offset_seconds": 0,
+          "values": {
+            "latitude": -12.087,
+            "longitude": -77.051,
+            "speed_kmh": 4.7,
+            "delivery_status": "IN_TRANSIT"
+          },
+          "commitment_offset_seconds": 120
+        },
+        {
+          "event_type": "location_event",
+          "offset_seconds": 60,
+          "values": {
+            "latitude": -12.0865,
+            "longitude": -77.0505,
+            "speed_kmh": 0,
+            "delivery_status": "IN_TRANSIT"
+          },
+          "commitment_offset_seconds": 120
+        },
+        {
+          "event_type": "location_event",
+          "offset_seconds": 180,
+          "values": {
+            "latitude": -12.0865,
+            "longitude": -77.0505,
+            "speed_kmh": 0,
+            "delivery_status": "IN_TRANSIT"
+          },
+          "commitment_offset_seconds": 120
+        },
+        {
+          "event_type": "location_event",
+          "offset_seconds": 240,
+          "values": {
+            "latitude": -12.086,
+            "longitude": -77.05,
+            "speed_kmh": 0,
+            "delivery_status": "DELIVERED"
+          },
+          "commitment_offset_seconds": 120
+        }
+      ]
+    },
+    "TELEMETRY_ANOMALY": {
+      "description": "Desviación térmica observada; sin diagnóstico ni etiqueta calculada.",
+      "verticals": {
+        "V1": "principal",
+        "V4": "principal"
+      },
+      "steps": [
+        {
+          "event_type": "telemetry_event",
+          "offset_seconds": 0,
+          "values": {
+            "value": 4.5,
+            "status": "ACTIVE"
+          },
+          "entities": {
+            "device_id": "cold-room-device"
+          }
+        },
+        {
+          "event_type": "telemetry_event",
+          "offset_seconds": 60,
+          "values": {
+            "value": 4.6,
+            "status": "ACTIVE"
+          },
+          "entities": {
+            "device_id": "cold-room-device"
+          }
+        },
+        {
+          "event_type": "telemetry_event",
+          "offset_seconds": 120,
+          "values": {
+            "value": 9.0,
+            "status": "ACTIVE"
+          },
+          "entities": {
+            "device_id": "cold-room-device"
+          }
+        },
+        {
+          "event_type": "telemetry_event",
+          "offset_seconds": 180,
+          "values": {
+            "value": 12.0,
+            "status": "ACTIVE"
+          },
+          "entities": {
+            "device_id": "cold-room-device"
+          }
+        }
+      ]
+    },
+    "WAREHOUSE_EQUIPMENT_DEGRADATION": {
+      "description": "Incremento progresivo de vibración, sin certificar una falla.",
+      "verticals": {
+        "V1": "principal",
+        "V4": "principal"
+      },
+      "steps": [
+        {
+          "event_type": "warehouse_sensor_event",
+          "offset_seconds": 0,
+          "values": {
+            "value": 2.5,
+            "status": "ACTIVE"
+          }
+        },
+        {
+          "event_type": "warehouse_sensor_event",
+          "offset_seconds": 60,
+          "values": {
+            "value": 3.5,
+            "status": "ACTIVE"
+          }
+        },
+        {
+          "event_type": "warehouse_sensor_event",
+          "offset_seconds": 120,
+          "values": {
+            "value": 5.0,
+            "status": "ACTIVE"
+          }
+        },
+        {
+          "event_type": "warehouse_sensor_event",
+          "offset_seconds": 180,
+          "values": {
+            "value": 7.0,
+            "status": "ACTIVE"
+          }
+        },
+        {
+          "event_type": "warehouse_sensor_event",
+          "offset_seconds": 240,
+          "values": {
+            "value": 9.0,
+            "status": "ACTIVE"
+          }
+        }
+      ]
+    }
+  }
+}
