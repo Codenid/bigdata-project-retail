@@ -276,3 +276,13 @@ en ese orden. Rechaza artefactos BigQuery, objetos Storage y subscriptions exter
 No admite purge/force ni elimina identidades, IAM Foundation, APIs, proyecto o
 billing. Los permisos preexistentes se conservan. Los prechecks no sustituyen las
 protecciones de cada módulo frente a cambios concurrentes.
+
+
+## Operación manual — FASE 3.2
+
+OPERATOR_ACCOUNT es una cuenta existente configurada para herramientas manuales,
+separada conceptualmente de BOOTSTRAP_ACCOUNT. No representa una Service Account
+nueva ni un recurso adicional del catálogo. El productor solo publica en
+RS-STR-001 y comprueba previamente la cuenta activa. No usa RS-SEC-001/002 ni
+asigna roles. El requisito es pubsub.topics.publish sobre RS-STR-001; si falta,
+se reporta y cualquier grant se aprueba por separado.

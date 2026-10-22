@@ -26,6 +26,14 @@ Mantener trazabilidad directa entre el diseño de la Arquitectura de Solución y
 
 ---
 
+## Productor unitario — FASE 3.2
+
+Las seis fuentes lógicas de entrada se ejercitan mediante
+`producers/streaming/send_event.py`. `build_event.py` construye muestras sintéticas
+sin leer ejemplos; `publish.py` adapta gcloud y la identidad OPERATOR_ACCOUNT.
+Reutiliza el validador oficial y publica únicamente en RS-STR-001. No crea recursos
+GCP, cambia IAM, consume mensajes ni implementa procesamiento downstream.
+
 ## Eventos streaming
 
 FASE 3.1: los seis contratos usan `contracts/streaming/common-event.schema.json`.

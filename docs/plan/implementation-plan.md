@@ -91,14 +91,14 @@ Validar contratos y conectividad de forma simple, evento por evento.
 Ejemplos:
 
 ```bash
-python send_event.py --type clic_event
-python send_event.py --type stock_event
-python send_event.py --type location_event
+python -m producers.streaming.send_event --type clic_event
+python -m producers.streaming.send_event --type stock_event
+python -m producers.streaming.send_event --type location_event
 ```
 
 ## Alcance
 - 1 evento a demanda;
-- N eventos;
+- N eventos (diferido; FASE 3.2 publica únicamente uno por ejecución);
 - validación JSON Schema;
 - publicación en Tópico Eventos Retail;
 - logs claros.

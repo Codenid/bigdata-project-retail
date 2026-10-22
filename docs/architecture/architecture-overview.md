@@ -279,3 +279,23 @@ capas posteriores; la coherencia cantidad/capacidad es validación del hecho.
 Gobierno: registrar decisión → actualizar Arquitectura de Solución → actualizar
 catálogo/documentación → modificar implementación. Los contratos locales no
 incorporan recursos GCP ni Schema Registry.
+
+## Decisión arquitectónica — FASE 3.2: productor CLI unitario
+
+Diseño aprobado: herramienta manual para las seis fuentes de entrada, sin
+infraestructura nueva, generación masiva, consumo ni procesamiento. El flujo es
+resolver configuración → construir → validate_event → serializar exactamente el
+evento validado → comprobar OPERATOR_ACCOUNT → publicar en RS-STR-001 → confirmar
+message_id. Dry-run termina tras mostrar el evento/destino, sin acceso a GCP.
+
+OPERATOR_ACCOUNT identifica la cuenta existente de ejecución manual; permanece
+separada de BOOTSTRAP_ACCOUNT (aprovisionamiento/administración), aunque puedan
+coincidir inicialmente. No se usan deployer ni Dataflow como productor, no se
+crean identidades y no se modifica IAM. Si falta pubsub.topics.publish sobre el
+tópico aprobado, se detiene y se informa; un grant requiere aprobación separada.
+
+Las seis fábricas construyen datos ficticios coherentes, sin dependencia runtime
+de fixtures o ejemplos. Los schemas versionados y validate_event son la autoridad
+sobre tipos, enums, restricciones y coherencia del contrato. Un compromiso nuevo
+se asocia a una entrega ficticia nueva; no se desplaza el compromiso de una misma
+entrega. La publicación gcloud queda desacoplada de la construcción de eventos.

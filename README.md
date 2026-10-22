@@ -13,12 +13,13 @@ especializado → Gold → consumidores.
 | 2.5 BigQuery | COMPLETADO |
 | 2.6 Deploy integrado | COMPLETADO |
 | 3.1 Event Contracts | COMPLETADO |
-| 3.2 y fases posteriores | PENDIENTE |
+| 3.2 Productor CLI unitario | COMPLETADO |
+| 3.3 y fases posteriores | PENDIENTE |
 
-Último avance: seis contratos de entrada v1 con envelope común, validación local
-y ejemplos válidos e inválidos. Trazabilidad aprobada por la Arquitectura de
-Solución; sin productores ni publicación. El binding Pub/Sub Editor preexistente
-se conserva según la evidencia 2.6.
+Último avance: productor unitario para seis eventos, validado contra contratos
+oficiales, con identidad OPERATOR_ACCOUNT separada de aprovisionamiento.
+Seis dry-runs y seis publicaciones reales confirmadas; sin consumo ni
+procesamiento. Pruebas locales: 125 correctas.
 
 Comandos: Python 3.10+; para infraestructura, gcloud autenticado y
 `config/dev.env` local. Los tests de contratos no requieren GCP.
@@ -30,6 +31,9 @@ Comandos: Python 3.10+; para infraestructura, gcloud autenticado y
 # Eliminación explícita, únicamente con dataset y buckets vacíos:
 ./scripts/destroy_streaming_core.sh --execute-destroy
 python3 -m pip install -r requirements-dev.txt
+python -m producers.streaming.send_event --type stock_event --dry-run
+python -m producers.streaming.send_event --type stock_event
+python3 -m unittest discover -s producers/tests -v
 python3 -m unittest discover -s contracts/tests -v
 python3 -m unittest discover -s infra/tests -v
 ```
@@ -42,7 +46,9 @@ Evidencias: [2.1](docs/progress/phase-2.1-bootstrap.md),
 [2.2](docs/progress/phase-2.2-iam.md), [2.3](docs/progress/phase-2.3-pubsub.md),
 [2.4](docs/progress/phase-2.4-storage.md), [2.5](docs/progress/phase-2.5-bigquery.md),
 [2.6](docs/progress/phase-2.6-integrated-deploy.md),
-[3.1](docs/progress/phase-3.1-event-contracts.md).
+[3.1](docs/progress/phase-3.1-event-contracts.md),
+[3.2](docs/progress/phase-3.2-unit-producer.md).
+Productor: [uso e identidad operativa](producers/streaming/README.md).
 Operación y eliminación: [Pub/Sub](infra/pubsub/README.md),
 [Storage y costo residual de Bronze](infra/storage/README.md),
 [BigQuery e IAM temporal](infra/bigquery/README.md).
