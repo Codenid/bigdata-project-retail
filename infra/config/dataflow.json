@@ -1,0 +1,20 @@
+{
+  "components": ["RS-STR-010", "RS-STR-011"],
+  "subscription": "RS-STR-002",
+  "bronze": "RS-DATA-001",
+  "staging": "RS-STR-004",
+  "runtime": "RS-SEC-001",
+  "launcher": "RS-SEC-002",
+  "runtime_project_role": "roles/dataflow.worker",
+  "runtime_subscription_role": "roles/pubsub.subscriber",
+  "runtime_bucket_role": "roles/storage.objectAdmin",
+  "launcher_project_role": "roles/dataflow.developer",
+  "launcher_runtime_role": "roles/iam.serviceAccountUser",
+  "launcher_staging_role": "roles/storage.objectAdmin",
+  "active_job_limit": 1,
+  "pricing_us_central1": {
+    "streaming_vcpu_hour_usd": 0.069,
+    "memory_gib_hour_usd": 0.003557,
+    "standard_pd_gib_hour_usd": 0.000054
+  }
+}
