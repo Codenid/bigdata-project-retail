@@ -29,6 +29,8 @@ class State:
     last_event_id: str = ''
     last_message_id: str = ''
     last_event_time: str = ''
+    last_publish_time: str = ''
+    last_result: str = ''
     reason: str = ''
     cursor: int = 0
     last_started: float = float('-inf')
@@ -178,6 +180,7 @@ class ProducerEngine:
             with self.lock:
                 state.last_event_id, state.last_event_time = event['event_id'],event['event_timestamp']
                 state.last_message_id = record['message_id'] or ''
+                state.last_publish_time, state.last_result = record['timestamp'],record['result']
                 state.success += record['result']=='OK'
                 state.errors += record['result']!='OK'
                 state.samples.append(time.monotonic())
@@ -253,7 +256,8 @@ class ProducerEngine:
                 rows[source_id]=dict(rate=state.rate,status='RUNNING' if state.running else 'STOPPED',
                     produced=state.produced,events_sent=state.success,success=state.success,errors=state.errors,
                     observed_rate=len(recent)/5, last_event_id=state.last_event_id,
-                    last_message_id=state.last_message_id,last_event_time=state.last_event_time,reason=state.reason)
+                    last_message_id=state.last_message_id,last_event_time=state.last_event_time,
+                    last_publish_time=state.last_publish_time,last_result=state.last_result,reason=state.reason)
             return dict(sources=rows,activity=deepcopy(list(reversed(self.activity))),
                 total_produced=sum(s.produced for s in self.states.values()),
                 successful_publishes=sum(s.success for s in self.states.values()),

@@ -24,6 +24,7 @@ class SourceEmulatorUI(unittest.TestCase):
             app=self.app()
         self.assertIsNone(app.session_state['engine'])
         self.assertTrue(app.button(key='start_shelf').disabled)
+        self.assertTrue(app.button(key='test_shelf').disabled)
 
     def test_batch_coming_next(self):
         app=self.app();app.radio[0].set_value('Batch').run()
@@ -37,16 +38,34 @@ class SourceEmulatorUI(unittest.TestCase):
         self.assertIn('Tracking Logístico',text)
         self.assertIn('Cámaras Frigoríficas',text)
 
-    def test_connect_and_send_once_updates_metrics_activity(self):
+    def test_connect_and_test_updates_pubsub_observability(self):
         app=self.app();self.connect(app)
-        app.button(key='once_shelf').click().run()
+        app.button(key='test_shelf').click().run()
+        app.run()  # El fragmento periódico refleja el snapshot actualizado.
         self.assertEqual(len(app.exception),0)
         snapshot=app.session_state['engine'].snapshot()
         self.assertEqual(snapshot['successful_publishes'],1)
         self.assertEqual(snapshot['activity'][0]['message_id'],'123')
+        self.assertEqual(snapshot['sources']['shelf']['last_result'],'OK')
+        self.assertEqual(snapshot['sources']['shelf']['last_message_id'],'123')
+        self.assertTrue(snapshot['sources']['shelf']['last_publish_time'].endswith('Z'))
+        self.assertTrue(any('CONNECTED' in str(row.value) for row in app.markdown))
+        self.assertTrue(any(str(row.value)=='123' for row in app.code))
         app.radio[0].set_value('Activity').run()
         self.assertEqual(len(app.exception),0)
         self.assertEqual(len(app.json),1)
+
+    def test_failed_test_shows_error_without_message_id(self):
+        app=self.app()
+        with patch('producers.emulator.transport.OperatorPublisher',return_value=lambda *args:(_ for _ in ()).throw(RuntimeError('private detail'))):
+            app.button(key='connect_operator').click().run()
+        app.button(key='test_shelf').click().run()
+        app.run()
+        state=app.session_state['engine'].snapshot()['sources']['shelf']
+        self.assertEqual(state['last_result'],'ERROR')
+        self.assertEqual(state['last_message_id'],'')
+        self.assertEqual(state['errors'],1)
+        self.assertTrue(any('ERROR' in str(row.value) for row in app.markdown))
 
     def test_profile_disables_incompatible_sources(self):
         app=self.app();self.connect(app)

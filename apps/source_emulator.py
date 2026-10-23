@@ -29,10 +29,12 @@ h3 {letter-spacing:-.02em}
 
 if 'engine' not in st.session_state:
     st.session_state.engine=None
+if 'connection_error' not in st.session_state:
+    st.session_state.connection_error=False
 
 with st.sidebar:
     st.markdown('## ◈ RetailSmart')
-    st.caption('SOURCE EMULATOR / V1')
+    st.caption('SOURCE EMULATOR / V1.1')
     page=st.radio('Workspace',['Overview','Streaming','Batch','Activity'],label_visibility='collapsed')
     st.divider()
     try:
@@ -50,11 +52,14 @@ with st.sidebar:
                 with st.spinner('Verificando identidad operativa…'):
                     transport=OperatorPublisher(config,resources)
                     st.session_state.engine=ProducerEngine(config,resources,transport)
+                    st.session_state.connection_error=False
                 st.rerun()
             except Exception:
-                st.error('No se pudo conectar. Revisa OPERATOR_ACCOUNT y la autenticación activa de gcloud. No se modificó IAM.')
+                st.session_state.connection_error=True
+        if st.session_state.connection_error:
+            st.error('ERROR · Revisa OPERATOR_ACCOUNT y la autenticación activa de gcloud. No se modificó IAM.')
     else:
-        st.success('Identidad operativa verificada')
+        st.success('CONNECTED · Identidad operativa verificada')
         if st.button('Desconectar y detener',key='disconnect_operator',width='stretch'):
             engine.close()
             st.session_state.engine=None
@@ -76,7 +81,7 @@ def action(function,*args):
 
 def activity_view(activity):
     if not activity:
-        st.info('Todavía no hay eventos. Conecta la identidad y usa START o SEND ONCE en una fuente.')
+        st.info('Todavía no hay eventos. Conecta la identidad y usa START o TEST en una fuente.')
         return
     st.dataframe([{k:v for k,v in row.items() if k in (
         'timestamp','source_application','event_type','event_id','message_id','result')}
@@ -136,11 +141,14 @@ def workspace():
     for index,source in enumerate(SOURCES):
         enabled=connected and compatible(source.id,scenario)
         state=engine.snapshot()['sources'][source.id] if connected else dict(status='STOPPED',rate=1,
-            events_sent=0,success=0,errors=0,observed_rate=0,last_event_id='',last_message_id='',last_event_time='',reason='')
+            events_sent=0,success=0,errors=0,observed_rate=0,last_event_id='',last_message_id='',
+            last_event_time='',last_publish_time='',last_result='',reason='')
         with columns[index%2],st.container(border=True):
-            title,status=st.columns([4,1])
+            title,status=st.columns([3,2])
             title.markdown('### '+source.icon+' '+source.name)
-            status.markdown('🟢 RUNNING' if state['status']=='RUNNING' else '⚪ STOPPED')
+            runtime='🟢 RUNNING' if state['status']=='RUNNING' else '⚪ STOPPED'
+            pubsub={'OK':'🟢 CONNECTED','ERROR':'🔴 ERROR'}.get(state.get('last_result'),'⚪ NOT TESTED')
+            status.markdown(runtime+'  \n'+pubsub)
             st.caption(source.description+' · '+source.event_type)
             if not compatible(source.id,scenario):
                 st.caption('Esta fuente no participa en el escenario seleccionado.')
@@ -150,19 +158,22 @@ def workspace():
             if connected and enabled and rate!=state['rate']:
                 action(engine.set_rate,source.id,rate)
             r2.caption(f"Objetivo {state['rate']:g} evt/s · observado {state['observed_rate']:.1f} evt/s (5s)")
-            start,stop,once=st.columns(3)
+            start,stop,test=st.columns(3)
             if start.button('START',key='start_'+source.id,type='primary',disabled=not enabled or state['status']=='RUNNING',width='stretch') and enabled:
                 action(engine.start_source,source.id)
             if stop.button('STOP',key='stop_'+source.id,disabled=not connected or state['status']!='RUNNING',width='stretch') and connected:
                 action(engine.stop_source,source.id)
-            if once.button('SEND ONCE',key='once_'+source.id,disabled=not enabled or state['status']=='RUNNING',width='stretch') and enabled:
+            if test.button('TEST',key='test_'+source.id,disabled=not enabled or state['status']=='RUNNING',width='stretch') and enabled:
                 action(engine.send_once,source.id)
-            m1,m2,m3=st.columns(3)
-            m1.metric('Events sent',state['events_sent']);m2.metric('Success',state['success']);m3.metric('Errors',state['errors'])
-            with st.expander('Última publicación',expanded=False):
+            m1,m2=st.columns(2)
+            m1.metric('Publicado',state['success']);m2.metric('Errores',state['errors'])
+            st.caption('Último message_id')
+            st.code(state['last_message_id'] or '—',language=None)
+            st.caption('Último timestamp · publicación UTC')
+            st.code(state.get('last_publish_time') or '—',language=None)
+            with st.expander('Detalle del último evento',expanded=False):
                 st.text('Event ID: '+(state['last_event_id'] or '—'))
-                st.text('Message ID: '+(state['last_message_id'] or '—'))
-                st.text('Event time: '+(state['last_event_time'] or '—'))
+                st.text('Event timestamp: '+(state['last_event_time'] or '—'))
             if state['reason']:
                 st.caption(state['reason'])
     if page=='Overview':

@@ -57,6 +57,10 @@ class EngineTests(unittest.TestCase):
         row=self.engine.snapshot()['activity'][0]
         self.assertEqual(row['message_id'],'1001')
         self.assertEqual(row['result'],'OK')
+        source=self.engine.snapshot()['sources']['shelf']
+        self.assertEqual(source['last_result'],'OK')
+        self.assertEqual(source['last_message_id'],'1001')
+        self.assertTrue(source['last_publish_time'].endswith('Z'))
 
     def test_start_stop_no_more_events_after_stop(self):
         self.engine.set_rate('shelf',20)
@@ -136,6 +140,7 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(snapshot['total_produced'],1)
         self.assertNotIn('secret-credential',json.dumps(snapshot))
         self.assertIsNone(snapshot['activity'][0]['message_id'])
+        self.assertEqual(snapshot['sources']['shelf']['last_result'],'ERROR')
 
     def test_metrics_exact_counts(self):
         self.engine.send_once('shelf');self.engine.send_once('iot')
